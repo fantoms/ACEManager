@@ -1,0 +1,9 @@
+{
+  "AppRootDirectory": "%SYSTEMROOT%//ACEmulator//",
+  "SaveLogFile": true,
+  "LocalLogPath": "ACEManagerLog_",
+  "LogFilenameFormat": "yyyy-M-dd_HH-mm-ss",
+  "LogDataFormat": "yyyy-M-dd_HH-mm-ss.ffff",
+  "EnableAutoRestart": false,
+  "AnnounceEvents": false
+}

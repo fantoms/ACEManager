@@ -13,12 +13,16 @@ namespace ACEManager
         /// </summary>
         public static LameLog Log = new LameLog();
 
+        private static Config StartingConfig { get; set; } 
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
+            Log.AddLogLine("Starting...");
+
             // Attempt to load config
             //  If load fails, attempt to build a new one or fail
             try
@@ -34,12 +38,21 @@ namespace ACEManager
             if (!ConfigManager.ConfigurationLoaded)
                 Environment.Exit(1);
 
+            // Saving initial config for comparison on exit. This is used to save settings.
+            StartingConfig = ConfigManager.Configuration;
+
             // Register the exit event to save the program log.
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FormServerControl());
+
+            // Finish
+            if (!StartingConfig.Equals(ConfigManager.Configuration))
+                ConfigManager.Save();
+
+            Log.AddLogLine("...Exiting.");
         }
 
         async static void SaveProgramLog()

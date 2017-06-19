@@ -17,7 +17,7 @@ namespace ACEManager
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public bool SaveLogFile { get; set; }
 
-        [DefaultValue("%TMP%")]
+        [DefaultValue(@"ACEManagerLog_")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string LocalLogPath { get; set; }
 
@@ -80,7 +80,7 @@ namespace ACEManager
 
         public static void ApplyDefaults()
         {
-            Configuration = new Config() { AppRootDirectory = "%SYSTEMROOT%//ACEmulator//", EnableAutoRestart = false, AnnounceEvents = false, SaveLogFile = false, LocalLogPath = $@"%TMP%", LogDataFormat = "yyyy-M-dd_HH-mm-ss.ffff", LogFilenameFormat = "yyyy-M-dd_HH-mm-ss" };
+            Configuration = new Config() { AppRootDirectory = "%SYSTEMROOT%//ACEmulator//", EnableAutoRestart = false, AnnounceEvents = false, SaveLogFile = true, LocalLogPath = @"ACEManagerLog_", LogDataFormat = "yyyy-M-dd_HH-mm-ss.ffff", LogFilenameFormat = "yyyy-M-dd_HH-mm-ss" };
             ConfigurationLoaded = true;
         }
 
