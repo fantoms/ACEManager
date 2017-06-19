@@ -10,11 +10,16 @@ using System.Windows.Forms;
 
 namespace ACEManager
 {
-    public partial class Form1 : Form
+    public partial class FormServerControl : Form
     {
-        public Form1()
+        public FormServerControl()
         {
             InitializeComponent();
+        }
+
+        private void consoleControl1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
