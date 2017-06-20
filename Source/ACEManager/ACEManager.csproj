@@ -99,9 +99,6 @@
   <ItemGroup>
     <Content Include="Zebidee.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>copy "$(ProjectDir)config.json" "$(TargetDir)\"</PreBuildEvent>
