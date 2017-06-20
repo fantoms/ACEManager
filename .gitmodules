@@ -1,3 +1,3 @@
 [submodule "ConsoleControl"]
-	path = ConsoleControl
+	path = Source/ConsoleControl
 	url = https://github.com/fantoms/consolecontrol.git
