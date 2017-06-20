@@ -17,6 +17,11 @@
 * The preferred way to contribute is to fork the repo and submit a pull request on GitHub.
 * Code style information can be found on the [Wiki](https://github.com/ACEmulator/ACE/wiki/Code-Style).
 
+## Code Contributions
+
+* A modified version of ConsoleControl (MIT License) was used with this tool is included in the repository.
+* C# ConsoleControl library was originaly written by Dave Kerr (http://www.dwmkerr.com/). Additional interface disposal contributions taken from @webmaster442, on github.
+
 ## Bug Reports
 
 * Please use the [issue tracker](https://github.com/fantoms/ACEManager/issues) provided by GitHub to send us bug reports.
