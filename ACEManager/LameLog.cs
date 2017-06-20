@@ -40,7 +40,7 @@ namespace ACEManager
 
         public async Task<bool> SaveLog()
         {
-            if (!ConfigManager.Configuration.SaveLogFile)
+            if (!ConfigManager.StartingConfiguration.SaveLogFile)
             {
                 Console.WriteLine("Avoiding log save due to configuration setting.");
                 return false;
@@ -52,19 +52,19 @@ namespace ACEManager
                 var logDataFormat = LogDataFormat;
 
                 // What IF: No CONFIG?!
-                if (!string.IsNullOrEmpty(ConfigManager.Configuration.LocalLogPath))
+                if (!string.IsNullOrEmpty(ConfigManager.StartingConfiguration.LocalLogPath))
                 {
-                    logLocation = ConfigManager.Configuration.LocalLogPath;
+                    logLocation = ConfigManager.StartingConfiguration.LocalLogPath;
                 }
 
-                if (!string.IsNullOrEmpty(ConfigManager.Configuration.LogFilenameFormat))
+                if (!string.IsNullOrEmpty(ConfigManager.StartingConfiguration.LogFilenameFormat))
                 {
-                    logFilenameFormat = ConfigManager.Configuration.LogFilenameFormat;
+                    logFilenameFormat = ConfigManager.StartingConfiguration.LogFilenameFormat;
                 }
 
-                if (!string.IsNullOrEmpty(ConfigManager.Configuration.LogDataFormat))
+                if (!string.IsNullOrEmpty(ConfigManager.StartingConfiguration.LogDataFormat))
                 {
-                    logDataFormat = ConfigManager.Configuration.LogDataFormat;
+                    logDataFormat = ConfigManager.StartingConfiguration.LogDataFormat;
                 }
 
                 var logFileName = DateTime.Now.ToString(logFilenameFormat) + LogFilenameExt;
@@ -75,7 +75,7 @@ namespace ACEManager
                     foreach (Tuple<DateTime, string> kvp in this.LogStringsByTime)
                     {
                         byte[] line = Encoding.ASCII.GetBytes($"{kvp.Item1.ToString(logDataFormat)} : {kvp.Item2}\r\n");
-                        await logFile.WriteAsync(line, 0, line.Length);
+                        logFile.Write(line, 0, line.Length);
                     }
                     logFile.Close();
                 }

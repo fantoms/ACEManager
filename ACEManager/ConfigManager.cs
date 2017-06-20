@@ -11,7 +11,15 @@ namespace ACEManager
     {
         [DefaultValue("%SYSTEMROOT%//ACEmulator//")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
-        public string AppRootDirectory { get; set; }
+        public string AceServerPath { get; set; }
+
+        [DefaultValue("ACE.exe")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public string AceServerExecutable { get; set; }
+
+        [DefaultValue("")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public string AceServerArguments { get; set; }
 
         [DefaultValue(true)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
@@ -42,7 +50,7 @@ namespace ACEManager
     {
         public static bool ConfigurationLoaded { get; set; } = false;
 
-        public static Config Configuration { get; set; }
+        public static Config StartingConfiguration { get; set; }
 
         public static string ConfigFile { get; private set; }
 
@@ -53,13 +61,13 @@ namespace ACEManager
             if (!File.Exists(ConfigFile))
             {
                 ApplyDefaults();
-                Save();
+                Save(StartingConfiguration);
             }
             else
             {
                 try
                 {
-                    Configuration = JsonConvert.DeserializeObject<Config>(File.ReadAllText(ConfigFile));
+                    StartingConfiguration = JsonConvert.DeserializeObject<Config>(File.ReadAllText(ConfigFile));
                 }
                 //catch (System.IO.IOException exception)
                 //{
@@ -80,15 +88,15 @@ namespace ACEManager
 
         public static void ApplyDefaults()
         {
-            Configuration = new Config() { AppRootDirectory = "%SYSTEMROOT%//ACEmulator//", EnableAutoRestart = false, AnnounceEvents = false, SaveLogFile = true, LocalLogPath = @"ACEManagerLog_", LogDataFormat = "yyyy-M-dd_HH-mm-ss.ffff", LogFilenameFormat = "yyyy-M-dd_HH-mm-ss" };
+            StartingConfiguration = new Config() { AceServerPath = "%SYSTEMROOT%//ACEmulator//", AceServerExecutable = "ACE.exe", AceServerArguments = "", EnableAutoRestart = false, AnnounceEvents = false, SaveLogFile = true, LocalLogPath = @"ACEManagerLog_", LogDataFormat = "yyyy-M-dd_HH-mm-ss.ffff", LogFilenameFormat = "yyyy-M-dd_HH-mm-ss" };
             ConfigurationLoaded = true;
         }
 
-        public static void Save()
+        public static void Save(Config newConfig)
         {
             try
             {
-                File.WriteAllText(ConfigFile, JsonConvert.SerializeObject(Configuration, Formatting.Indented));
+                File.WriteAllText(ConfigFile, JsonConvert.SerializeObject(newConfig, Formatting.Indented));
             }
             catch (Exception exception)
             {
