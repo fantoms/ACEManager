@@ -31,17 +31,17 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>true</Prefer32Bit>
+    <DocumentationFile>
+    </DocumentationFile>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Zebidee.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
-    <Reference Include="ConsoleControl">
-      <HintPath>..\..\consolecontrol\source\ConsoleControl\bin\Release\ConsoleControl.dll</HintPath>
-    </Reference>
-    <Reference Include="ConsoleControlAPI">
-      <HintPath>..\..\consolecontrol\source\ConsoleControl\bin\Release\ConsoleControlAPI.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -59,6 +59,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AboutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ConfigManager.cs" />
     <Compile Include="FormServerControl.cs">
       <SubType>Form</SubType>
@@ -69,6 +75,9 @@
     <Compile Include="LameLog.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormServerControl.resx">
       <DependentUpon>FormServerControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -98,6 +107,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Zebidee.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ConsoleControl\source\ConsoleControlAPI\ConsoleControlAPI.csproj">
+      <Project>{a4b8573f-ebfc-4140-b8aa-7c037919ef57}</Project>
+      <Name>ConsoleControlAPI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConsoleControl\source\ConsoleControl\ConsoleControl.csproj">
+      <Project>{737cc7f2-ec7c-4800-b7eb-72637e892c42}</Project>
+      <Name>ConsoleControl</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

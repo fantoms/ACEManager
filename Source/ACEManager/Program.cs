@@ -15,6 +15,8 @@ namespace ACEManager
 
         public static Config Config;
 
+        public static AboutForm About;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -46,6 +48,8 @@ namespace ACEManager
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            About = new AboutForm();
             Application.Run(new FormServerControl());
 
             // Finish

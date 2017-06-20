@@ -164,7 +164,7 @@
             this.Controls.Add(this.btnKill);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormServerControl";
-            this.Text = "Server Control";
+            this.Text = "ACE Manager";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.FormServerControl_Paint);
             this.ResumeLayout(false);
             this.PerformLayout();
