@@ -75,6 +75,10 @@ namespace ACEManager
                 //}
                 catch (Exception exception)
                 {
+                    if (Program.Log != null)
+                    {
+                        Program.Log.AddLogLine($"Config Load Error: { exception.Message}");
+                    }
                     Console.WriteLine("An exception occured while loading the configuration file!");
                     Console.WriteLine($"Exception: {exception.Message}");
                     throw;
@@ -100,6 +104,10 @@ namespace ACEManager
             }
             catch (Exception exception)
             {
+                if (Program.Log != null)
+                {
+                    Program.Log.AddLogLine($"Config Load Error: { exception.Message}");
+                }
                 Console.WriteLine("An exception occured while saving the configuration file!");
                 Console.WriteLine($"Exception: {exception.Message}");
                 throw;

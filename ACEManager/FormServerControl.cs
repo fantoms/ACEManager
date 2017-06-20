@@ -18,9 +18,7 @@ namespace ACEManager
         private string aceServerPath { get; set; }
         private string aceServerExecutable { get; set; }
         private string aceServerArguments { get; set; }
-
         private ProcessInterface processInterface { get; set; }
-
         private SolidBrush statusBrush = new SolidBrush(Color.Red);
         private Graphics graphics { get; set; }
         private bool Exiting = false;
@@ -46,7 +44,7 @@ namespace ACEManager
             timerUpdateStatus.Start();
         }
 
-        private void UpdateStatus()
+        public void UpdateStatus()
         {
             if (!Exiting)
             {
@@ -66,7 +64,7 @@ namespace ACEManager
             consoleControl1.WriteInput(text, Color.LimeGreen, echo);
         }
 
-        private void StartServer()
+        public void StartServer()
         {
             if (!processInterface.IsProcessRunning)
                 processInterface.StartProcess(Path.Combine(aceServerPath, aceServerExecutable), aceServerArguments, aceServerPath);
@@ -76,38 +74,29 @@ namespace ACEManager
         {
             EchoCommand("Process ended.");
             Program.Log.AddLogLine(args.Content);
-            Console.WriteLine(args.Content);
             UpdateStatus();
         }
 
         private void ProcessInterface_OnProcessError(object sender, ProcessEventArgs args)
         {
             Program.Log.AddLogLine(args.Content);
-            Console.WriteLine(args.Content);
             UpdateStatus();
         }
 
         private void ProcessInterface_OnProcessInput(object sender, ProcessEventArgs args)
         {
             Program.Log.AddLogLine(args.Content);
-            Console.WriteLine(args.Content);
         }
 
         private void ProcessInterface_OnProcessOutput(object sender, ProcessEventArgs args)
         {
             Program.Log.AddLogLine(args.Content);
-            Console.WriteLine(args.Content);
             if (!Exiting)
             {
                 consoleControl1.InternalRichTextBox.SelectionStart = consoleControl1.InternalRichTextBox.Text.Length;
                 // scroll it automatically
                 consoleControl1.InternalRichTextBox.ScrollToCaret();
             }
-        }
-
-        private void consoleControl1_Load(object sender, EventArgs e)
-        {
-            // do nothing yet
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -163,7 +152,7 @@ namespace ACEManager
             }
         }
 
-        private void consoleControl1_KeyDown(object sender, KeyEventArgs e)
+        private void rchTxtBxConsoleInput_KeyDown(object sender, KeyEventArgs e)
         {
             if ((char)e.KeyCode == (char)13)
             {
@@ -183,16 +172,6 @@ namespace ACEManager
             rchTxtBxConsoleInput.Clear();
         }
 
-        private void rchTxtBxConsoleInput_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void consoleControl1_KeyDown_1(object sender, KeyEventArgs e)
-        {
-            // do nothing yet
-        }
-
         private void timerUpdateStatus_Tick(object sender, EventArgs e)
         {
             if (!processInterface.IsProcessRunning)
@@ -201,7 +180,6 @@ namespace ACEManager
                 {
                     var msg = $"Restarting @ {DateTime.UtcNow.ToString("MM-dd-yyyy hh:mm:ss")}";
                     Program.Log.AddLogLine(msg);
-                    Console.WriteLine(msg);
                     EchoCommand(msg);
                     StartServer();
                     UpdateStatus();
@@ -229,9 +207,9 @@ namespace ACEManager
             // Final Confirm user wants to close, if connected to ssh.
             if (processInterface.IsProcessRunning)
             {
-                switch (MessageBox.Show(this, "You're still running the server!\n\nAre you sure you want to close?", "Closing", MessageBoxButtons.YesNo))
+                switch (MessageBox.Show(this, "The server is still active!\n\nAre you sure you want to kill the server?\n\nPerforming this action will hard-stop the server, without allowing it too shutdown properly\n\nPlease click on the Cancel button below and use the shutdown command, before closing the application.\n\n*WARNING: AFTER CLICKING OK DATA LOSS MAY OCCUR*", "Active Server Exit Warning", MessageBoxButtons.OKCancel))
                 {
-                    case DialogResult.No:
+                    case DialogResult.Cancel:
                         e.Cancel = true;
                         break;
                     default:

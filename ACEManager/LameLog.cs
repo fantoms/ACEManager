@@ -15,7 +15,7 @@ namespace ACEManager
     }
 
     /// <summary>
-    /// Development Component used for learning Threading. The functions save readable text data too log files.
+    /// Save readable text data into text "log" files.
     /// </summary>
     public partial class LameLog
     {
@@ -27,23 +27,25 @@ namespace ACEManager
 
         public LameLog() { }
 
-        static readonly object _syncLockObject = new object();
+        static readonly object _objectLock = new object();
 
         public void AddLogLine(string logLine)
         {
-            lock (_syncLockObject)
+            lock (_objectLock)
             {
-                Console.WriteLine(logLine);
-                LogStringsByTime.Add(DateTime.Now, logLine);
+                if (ConfigManager.StartingConfiguration.SaveLogFile)
+                    LogStringsByTime.Add(DateTime.Now, logLine);
+                else
+                    Console.WriteLine(logLine);
             }
         }
 
-        public async Task<bool> SaveLog()
+        public void SaveLog()
         {
             if (!ConfigManager.StartingConfiguration.SaveLogFile)
             {
                 Console.WriteLine("Avoiding log save due to configuration setting.");
-                return false;
+                return;
             }
             {
                 // attempt at saving log to log location...
@@ -82,9 +84,7 @@ namespace ACEManager
                 catch (Exception e)
                 {
                     Console.WriteLine("Error saving log file: " + e.ToString());
-                    return false;
                 }
-                return true;
             }
         }
     }

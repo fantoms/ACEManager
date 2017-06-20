@@ -36,12 +36,10 @@
     <ApplicationIcon>Zebidee.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ConsoleControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=7edd23586f5e297f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ConsoleControl">
       <HintPath>..\..\consolecontrol\source\ConsoleControl\bin\Release\ConsoleControl.dll</HintPath>
     </Reference>
-    <Reference Include="ConsoleControlAPI, Version=1.1.0.0, Culture=neutral, PublicKeyToken=7c86b8a36b9c33e2, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ConsoleControlAPI">
       <HintPath>..\..\consolecontrol\source\ConsoleControl\bin\Release\ConsoleControlAPI.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -100,6 +98,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Zebidee.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

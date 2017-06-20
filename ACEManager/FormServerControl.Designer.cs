@@ -34,12 +34,12 @@
             this.btnStopNow = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnStart = new System.Windows.Forms.Button();
-            this.consoleControl1 = new ConsoleControl.ConsoleControl();
             this.rchTxtBxConsoleInput = new System.Windows.Forms.RichTextBox();
             this.chkBxAutoRestart = new System.Windows.Forms.CheckBox();
             this.lblRunningStatus = new System.Windows.Forms.Label();
             this.timerUpdateStatus = new System.Windows.Forms.Timer(this.components);
             this.btnCancelShutdown = new System.Windows.Forms.Button();
+            this.consoleControl1 = new ConsoleControl.ConsoleControl();
             this.SuspendLayout();
             // 
             // btnKill
@@ -82,23 +82,6 @@
             this.btnStart.UseVisualStyleBackColor = true;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
-            // consoleControl1
-            // 
-            this.consoleControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.consoleControl1.AutoScroll = true;
-            this.consoleControl1.CausesValidation = false;
-            this.consoleControl1.IsInputEnabled = false;
-            this.consoleControl1.Location = new System.Drawing.Point(0, 41);
-            this.consoleControl1.Name = "consoleControl1";
-            this.consoleControl1.SendKeyboardCommandsToProcess = false;
-            this.consoleControl1.ShowDiagnostics = true;
-            this.consoleControl1.Size = new System.Drawing.Size(813, 286);
-            this.consoleControl1.TabIndex = 8;
-            this.consoleControl1.Load += new System.EventHandler(this.consoleControl1_Load);
-            this.consoleControl1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.consoleControl1_KeyDown_1);
-            // 
             // rchTxtBxConsoleInput
             // 
             this.rchTxtBxConsoleInput.BackColor = System.Drawing.Color.Black;
@@ -106,15 +89,14 @@
             this.rchTxtBxConsoleInput.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.rchTxtBxConsoleInput.EnableAutoDragDrop = true;
             this.rchTxtBxConsoleInput.ForeColor = System.Drawing.Color.White;
-            this.rchTxtBxConsoleInput.Location = new System.Drawing.Point(0, 333);
+            this.rchTxtBxConsoleInput.Location = new System.Drawing.Point(0, 377);
             this.rchTxtBxConsoleInput.Multiline = false;
             this.rchTxtBxConsoleInput.Name = "rchTxtBxConsoleInput";
             this.rchTxtBxConsoleInput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.rchTxtBxConsoleInput.Size = new System.Drawing.Size(813, 24);
             this.rchTxtBxConsoleInput.TabIndex = 9;
             this.rchTxtBxConsoleInput.Text = "";
-            this.rchTxtBxConsoleInput.TextChanged += new System.EventHandler(this.rchTxtBxConsoleInput_TextChanged);
-            this.rchTxtBxConsoleInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.consoleControl1_KeyDown);
+            this.rchTxtBxConsoleInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.rchTxtBxConsoleInput_KeyDown);
             // 
             // chkBxAutoRestart
             // 
@@ -150,11 +132,26 @@
             this.btnCancelShutdown.UseVisualStyleBackColor = true;
             this.btnCancelShutdown.Click += new System.EventHandler(this.btnCancelShutdown_Click);
             // 
+            // consoleControl1
+            // 
+            this.consoleControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.consoleControl1.AutoScroll = true;
+            this.consoleControl1.CausesValidation = false;
+            this.consoleControl1.IsInputEnabled = false;
+            this.consoleControl1.Location = new System.Drawing.Point(0, 41);
+            this.consoleControl1.Name = "consoleControl1";
+            this.consoleControl1.SendKeyboardCommandsToProcess = false;
+            this.consoleControl1.ShowDiagnostics = true;
+            this.consoleControl1.Size = new System.Drawing.Size(813, 330);
+            this.consoleControl1.TabIndex = 8;
+            // 
             // FormServerControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(813, 357);
+            this.ClientSize = new System.Drawing.Size(813, 401);
             this.Controls.Add(this.btnCancelShutdown);
             this.Controls.Add(this.lblRunningStatus);
             this.Controls.Add(this.chkBxAutoRestart);

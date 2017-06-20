@@ -55,14 +55,9 @@ namespace ACEManager
             Log.AddLogLine("...Exiting.");
         }
 
-        async static void SaveProgramLog()
-        {
-            await Log.SaveLog();
-        }
-
         static void OnProcessExit(object sender, EventArgs e)
         {
-            SaveProgramLog();
+            Log.SaveLog();
         }
     }
 }
