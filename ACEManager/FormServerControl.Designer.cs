@@ -88,12 +88,13 @@
             this.rchTxtBxConsoleInput.DetectUrls = false;
             this.rchTxtBxConsoleInput.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.rchTxtBxConsoleInput.EnableAutoDragDrop = true;
-            this.rchTxtBxConsoleInput.ForeColor = System.Drawing.Color.White;
-            this.rchTxtBxConsoleInput.Location = new System.Drawing.Point(0, 377);
+            this.rchTxtBxConsoleInput.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rchTxtBxConsoleInput.ForeColor = System.Drawing.Color.LimeGreen;
+            this.rchTxtBxConsoleInput.Location = new System.Drawing.Point(0, 371);
             this.rchTxtBxConsoleInput.Multiline = false;
             this.rchTxtBxConsoleInput.Name = "rchTxtBxConsoleInput";
             this.rchTxtBxConsoleInput.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.rchTxtBxConsoleInput.Size = new System.Drawing.Size(813, 24);
+            this.rchTxtBxConsoleInput.Size = new System.Drawing.Size(813, 30);
             this.rchTxtBxConsoleInput.TabIndex = 9;
             this.rchTxtBxConsoleInput.Text = "";
             this.rchTxtBxConsoleInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.rchTxtBxConsoleInput_KeyDown);
