@@ -1,6 +1,6 @@
 ﻿namespace ACEManager
 {
-    partial class FormServerControl
+    public partial class FormServerControl
     {
         /// <summary>
         /// Required designer variable.
@@ -50,7 +50,7 @@
             this.btnKill.TabIndex = 0;
             this.btnKill.Text = "Kill";
             this.btnKill.UseVisualStyleBackColor = true;
-            this.btnKill.Click += new System.EventHandler(this.btnKill_Click);
+            this.btnKill.Click += new System.EventHandler(this.BtnKill_Click);
             // 
             // btnStopNow
             // 
@@ -60,7 +60,7 @@
             this.btnStopNow.TabIndex = 1;
             this.btnStopNow.Text = "Stop Now!";
             this.btnStopNow.UseVisualStyleBackColor = true;
-            this.btnStopNow.Click += new System.EventHandler(this.btnStopNow_Click);
+            this.btnStopNow.Click += new System.EventHandler(this.BtnStopNow_Click);
             // 
             // btnStop
             // 
@@ -70,7 +70,7 @@
             this.btnStop.TabIndex = 2;
             this.btnStop.Text = "Shutdown";
             this.btnStop.UseVisualStyleBackColor = true;
-            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
+            this.btnStop.Click += new System.EventHandler(this.BtnStop_Click);
             // 
             // btnStart
             // 
@@ -80,7 +80,7 @@
             this.btnStart.TabIndex = 4;
             this.btnStart.Text = "Start";
             this.btnStart.UseVisualStyleBackColor = true;
-            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
+            this.btnStart.Click += new System.EventHandler(this.BtnStart_Click);
             // 
             // rchTxtBxConsoleInput
             // 
@@ -97,7 +97,7 @@
             this.rchTxtBxConsoleInput.Size = new System.Drawing.Size(813, 30);
             this.rchTxtBxConsoleInput.TabIndex = 9;
             this.rchTxtBxConsoleInput.Text = "";
-            this.rchTxtBxConsoleInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.rchTxtBxConsoleInput_KeyDown);
+            this.rchTxtBxConsoleInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RchTxtBxConsoleInput_KeyDown);
             // 
             // chkBxAutoRestart
             // 
@@ -108,7 +108,7 @@
             this.chkBxAutoRestart.TabIndex = 10;
             this.chkBxAutoRestart.Text = "Auto-Restart Server (on failure or shutdown)";
             this.chkBxAutoRestart.UseVisualStyleBackColor = true;
-            this.chkBxAutoRestart.CheckedChanged += new System.EventHandler(this.chkBxAutoRestart_CheckedChanged);
+            this.chkBxAutoRestart.CheckedChanged += new System.EventHandler(this.ChkBxAutoRestart_CheckedChanged);
             // 
             // lblRunningStatus
             // 
@@ -121,7 +121,7 @@
             // 
             // timerUpdateStatus
             // 
-            this.timerUpdateStatus.Tick += new System.EventHandler(this.timerUpdateStatus_Tick);
+            this.timerUpdateStatus.Tick += new System.EventHandler(this.TimerUpdateStatus_Tick);
             // 
             // btnCancelShutdown
             // 
@@ -131,7 +131,7 @@
             this.btnCancelShutdown.TabIndex = 12;
             this.btnCancelShutdown.Text = "Cancel Shutdown";
             this.btnCancelShutdown.UseVisualStyleBackColor = true;
-            this.btnCancelShutdown.Click += new System.EventHandler(this.btnCancelShutdown_Click);
+            this.btnCancelShutdown.Click += new System.EventHandler(this.BtnCancelShutdown_Click);
             // 
             // consoleControl1
             // 
@@ -185,4 +185,3 @@
         private System.Windows.Forms.Button btnCancelShutdown;
     }
 }
-

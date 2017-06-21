@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace ACEManager
 {
-    static class Program
+    public static class Program
     {
         /// <summary>
         /// LameLog is a simple text logger.
@@ -21,7 +21,7 @@ namespace ACEManager
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        public static void Main()
         {
             Log.AddLogLine("Starting...");
 
@@ -59,7 +59,7 @@ namespace ACEManager
             Log.AddLogLine("...Exiting.");
         }
 
-        static void OnProcessExit(object sender, EventArgs e)
+        private static void OnProcessExit(object sender, EventArgs e)
         {
             Log.SaveLog();
         }

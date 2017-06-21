@@ -6,35 +6,27 @@ using System.Threading.Tasks;
 
 namespace ACEManager
 {
-    public class TupleList<T1, T2> : List<Tuple<T1, T2>>
-    {
-        public void Add(T1 item, T2 item2)
-        {
-            Add(new Tuple<T1, T2>(item, item2));
-        }
-    }
-
     /// <summary>
     /// Save readable text data into text "log" files.
     /// </summary>
-    public partial class LameLog
+    public class LameLog
     {
         public const string LogFilenameFormat = "yyyy-M-dd_HH-mm-ss";
         public const string LogFilenameExt = ".log";
         public const string LogDataFormat = "yyyy-M-dd_HH-mm-ss.ffff";
 
-        private TupleList<DateTime, string> LogStringsByTime = new TupleList<DateTime, string>();
+        private TupleList<DateTime, string> logStringsByTime = new TupleList<DateTime, string>();
 
         public LameLog() { }
 
-        static readonly object _objectLock = new object();
+        private static readonly object _objectLock = new object();
 
         public void AddLogLine(string logLine)
         {
             lock (_objectLock)
             {
                 if (ConfigManager.StartingConfiguration.SaveLogFile)
-                    LogStringsByTime.Add(DateTime.Now, logLine);
+                    logStringsByTime.Add(DateTime.Now, logLine);
                 else
                     Console.WriteLine(logLine);
             }
@@ -74,7 +66,7 @@ namespace ACEManager
                 try
                 {
                     var logFile = File.OpenWrite(logLocation + logFileName);
-                    foreach (Tuple<DateTime, string> kvp in this.LogStringsByTime)
+                    foreach (Tuple<DateTime, string> kvp in this.logStringsByTime)
                     {
                         byte[] line = Encoding.ASCII.GetBytes($"{kvp.Item1.ToString(logDataFormat)} : {kvp.Item2}\r\n");
                         logFile.Write(line, 0, line.Length);

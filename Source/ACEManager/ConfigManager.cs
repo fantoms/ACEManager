@@ -6,7 +6,6 @@ using System.ComponentModel;
 
 namespace ACEManager
 {
-    
     public struct Config
     {
         [DefaultValue("%SYSTEMROOT%//ACEmulator//")]
@@ -69,10 +68,6 @@ namespace ACEManager
                 {
                     StartingConfiguration = JsonConvert.DeserializeObject<Config>(File.ReadAllText(ConfigFile));
                 }
-                //catch (System.IO.IOException exception)
-                //{
-                //    MessageBox.Show("Please verify that your Config.json file is in the proper format (json) and is placed in the same folder, as this application. You may use the Config.json.example file, too create a new config.\n\nError Details:\n\n" + exception.ToString(), "Configuration missing error", MessageBoxButtons.OK);
-                //}
                 catch (Exception exception)
                 {
                     if (Program.Log != null)
