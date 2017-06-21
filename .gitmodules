@@ -1,3 +1,6 @@
 [submodule "ConsoleControl"]
 	path = Source/ConsoleControl
 	url = https://github.com/fantoms/consolecontrol.git
+[submodule "Source/ACEmulator"]
+	path = Source/ACEmulator
+	url = https://github.com/ACEmulator/ACE.git
