@@ -15,7 +15,11 @@ namespace ACEManager
 
         public static Config Config;
 
-        public static AboutForm About;
+        public static AboutForm AboutForm;
+
+        public static ConfigurationForm ConfigurationForm;
+
+        public static bool ConfigurationUpdated;
 
         /// <summary>
         /// The main entry point for the application.
@@ -49,12 +53,17 @@ namespace ACEManager
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            About = new AboutForm();
+            AboutForm = new AboutForm();
+            ConfigurationForm = new ConfigurationForm();
+
             Application.Run(new FormServerControl());
 
             // Finish
             if (!Config.Equals(ConfigManager.StartingConfiguration))
                 ConfigManager.Save(Config);
+
+            ConfigurationForm.Dispose();
+            AboutForm.Dispose();
 
             Log.AddLogLine("...Exiting.");
         }

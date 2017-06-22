@@ -32,8 +32,18 @@ namespace ACEManager
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool InsertMenu(IntPtr hMenu, int uPosition, int uFlags, int uIDNewItem, string lpNewItem);
 
-        // ID for the About item on the system menu
-        private int ext_SYSMENU_ABOUT_ID = 0x1;
+        /// <summary>
+        /// ID for the Config item on the system menu
+        /// </summary>
+        private const int ext_SYSMENU_CONFIG_ID = 0x1;
+        /// <summary>
+        /// ID for the Database Maintenance item on the system menu
+        /// </summary>
+        private const int ext_SYSMENU_DBMAINT_ID = 0x2;
+        /// <summary>
+        /// ID for the About item on the system menu
+        /// </summary>
+        private const int ext_SYSMENU_ABOUT_ID = 0x3;
 
         private string AceServerPath { get; set; }
         private string AceServerExecutable { get; set; }
@@ -63,6 +73,17 @@ namespace ACEManager
             timerUpdateStatus.Enabled = true;
             timerUpdateStatus.Interval = 3000;
             timerUpdateStatus.Start();
+        }
+
+        public void ReloadConfig()
+        {
+            AceServerPath = Program.Config.AceServerPath;
+            AceServerArguments = Program.Config.AceServerArguments;
+            AceServerExecutable = Program.Config.AceServerExecutable;
+            if (Program.Config.EnableAutoRestart)
+                chkBxAutoRestart.Checked = true;
+            else
+                chkBxAutoRestart.Checked = false;
         }
 
         /// <summary>
@@ -241,14 +262,20 @@ namespace ACEManager
 
         private void TimerUpdateStatus_Tick(object sender, EventArgs e)
         {
-                if (!ProcessInterface.IsProcessRunning && Program.Config.EnableAutoRestart)
-                {
-                    var msg = $"Restarting @ {DateTime.UtcNow.ToString("MM-dd-yyyy hh:mm:ss")}";
-                    Program.Log.AddLogLine(msg);
-                    EchoCommand(msg);
-                    StartServer();
-                    UpdateStatus();
-                }
+            if (!ProcessInterface.IsProcessRunning && Program.Config.EnableAutoRestart)
+            {
+                var msg = $"Restarting @ {DateTime.UtcNow.ToString("MM-dd-yyyy hh:mm:ss")}";
+                Program.Log.AddLogLine(msg);
+                EchoCommand(msg);
+                StartServer();
+                UpdateStatus();
+            }
+
+            if (Program.ConfigurationUpdated)
+            {
+                ReloadConfig();
+                Program.ConfigurationUpdated = false;
+            }
         }
 
         private void FormServerControl_Paint(object sender, PaintEventArgs e)
@@ -272,7 +299,9 @@ namespace ACEManager
             // Add a separator
             AppendMenu(hSysMenu, MF_SEPARATOR, 0, string.Empty);
 
-            // Add the About menu item
+            // Add the menu items
+            AppendMenu(hSysMenu, MF_STRING, ext_SYSMENU_CONFIG_ID, "&Application Settings…");
+            AppendMenu(hSysMenu, MF_STRING, ext_SYSMENU_DBMAINT_ID, "&Database Maintenance…");
             AppendMenu(hSysMenu, MF_STRING, ext_SYSMENU_ABOUT_ID, "&About…");
         }
 
@@ -280,11 +309,24 @@ namespace ACEManager
         {
             base.WndProc(ref m);
 
-            // Test if the About item was selected from the system menu
-            if ((m.Msg == WM_SYSCOMMAND) && ((int)m.WParam == ext_SYSMENU_ABOUT_ID))
-            {
-                Program.About.ShowDialog();
-            }
+            if (m.Msg == WM_SYSCOMMAND)
+                switch ((int)m.WParam)
+                {
+                    case ext_SYSMENU_CONFIG_ID:
+                        {
+                            Program.ConfigurationForm.ShowDialog();
+                            break;
+                        }
+                    case ext_SYSMENU_DBMAINT_ID:
+                        {
+                            break;
+                        }
+                    case ext_SYSMENU_ABOUT_ID:
+                        {
+                            Program.AboutForm.ShowDialog();
+                            break;
+                        }
+                }
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)

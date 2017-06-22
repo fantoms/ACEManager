@@ -25,7 +25,7 @@ namespace ACEManager
         {
             lock (_objectLock)
             {
-                if (ConfigManager.StartingConfiguration.SaveLogFile)
+                if (Program.Config.SaveLogFile)
                     logStringsByTime.Add(DateTime.Now, logLine);
                 else
                     Console.WriteLine(logLine);
@@ -34,7 +34,7 @@ namespace ACEManager
 
         public void SaveLog()
         {
-            if (!ConfigManager.StartingConfiguration.SaveLogFile)
+            if (!Program.Config.SaveLogFile)
             {
                 Console.WriteLine("Avoiding log save due to configuration setting.");
                 return;
@@ -46,19 +46,19 @@ namespace ACEManager
                 var logDataFormat = LogDataFormat;
 
                 // What IF: No CONFIG?!
-                if (!string.IsNullOrEmpty(ConfigManager.StartingConfiguration.LocalLogPath))
+                if (!string.IsNullOrEmpty(Program.Config.LocalLogPath))
                 {
-                    logLocation = ConfigManager.StartingConfiguration.LocalLogPath;
+                    logLocation = Program.Config.LocalLogPath;
                 }
 
-                if (!string.IsNullOrEmpty(ConfigManager.StartingConfiguration.LogFilenameFormat))
+                if (!string.IsNullOrEmpty(Program.Config.LogFilenameFormat))
                 {
-                    logFilenameFormat = ConfigManager.StartingConfiguration.LogFilenameFormat;
+                    logFilenameFormat = Program.Config.LogFilenameFormat;
                 }
 
-                if (!string.IsNullOrEmpty(ConfigManager.StartingConfiguration.LogDataFormat))
+                if (!string.IsNullOrEmpty(Program.Config.LogDataFormat))
                 {
-                    logDataFormat = ConfigManager.StartingConfiguration.LogDataFormat;
+                    logDataFormat = Program.Config.LogDataFormat;
                 }
 
                 var logFileName = DateTime.Now.ToString(logFilenameFormat) + LogFilenameExt;
