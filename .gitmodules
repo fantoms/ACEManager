@@ -4,3 +4,6 @@
 [submodule "Source/ACEmulator"]
 	path = Source/ACEmulator
 	url = https://github.com/ACEmulator/ACE.git
+[submodule "Source/ACE-World"]
+	path = Source/ACE-World
+	url = https://github.com/ACEmulator/ACE-World.git
