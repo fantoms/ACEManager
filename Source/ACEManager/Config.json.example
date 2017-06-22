@@ -1,9 +1,10 @@
 {
-  "AppRootDirectory": "%SYSTEMROOT%//ACEmulator//",
+  "AceServerPath": "..\\..\\..\\..\\Source\\ACEmulator\\Source\\ACE\\bin\\x64\\Debug\\",
+  "AceServerExecutable": "ACE.exe",
+  "AceServerArguments": "",
   "SaveLogFile": true,
   "LocalLogPath": "ACEManagerLog_",
   "LogFilenameFormat": "yyyy-M-dd_HH-mm-ss",
   "LogDataFormat": "yyyy-M-dd_HH-mm-ss.ffff",
-  "EnableAutoRestart": false,
-  "AnnounceEvents": false
+  "EnableAutoRestart": true
 }

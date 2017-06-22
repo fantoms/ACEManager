@@ -39,10 +39,6 @@ namespace ACEManager
         [DefaultValue(false)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public bool EnableAutoRestart { get; set; }
-
-        [DefaultValue(false)]
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
-        public bool AnnounceEvents { get; set; }
     }
 
     public static class ConfigManager
@@ -87,7 +83,7 @@ namespace ACEManager
 
         public static void ApplyDefaults()
         {
-            StartingConfiguration = new Config() { AceServerPath = "%SYSTEMROOT%//ACEmulator//", AceServerExecutable = "ACE.exe", AceServerArguments = "", EnableAutoRestart = false, AnnounceEvents = false, SaveLogFile = true, LocalLogPath = @"ACEManagerLog_", LogDataFormat = "yyyy-M-dd_HH-mm-ss.ffff", LogFilenameFormat = "yyyy-M-dd_HH-mm-ss" };
+            StartingConfiguration = new Config() { AceServerPath = "%SYSTEMROOT%//ACEmulator//", AceServerExecutable = "ACE.exe", AceServerArguments = "", EnableAutoRestart = false, SaveLogFile = true, LocalLogPath = @"ACEManagerLog_", LogDataFormat = "yyyy-M-dd_HH-mm-ss.ffff", LogFilenameFormat = "yyyy-M-dd_HH-mm-ss" };
             ConfigurationLoaded = true;
         }
 
