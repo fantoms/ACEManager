@@ -124,6 +124,10 @@ This application was created for use with the ACEMulator server application and 
 
 License published: https://raw.githubusercontent.com/fantoms/ACEManager/master/LICENSE or https://www.gnu.org/licenses/gpl-3.0.en.html
 
+More information about the ACEmulator project can be found here: http://acemulator.org/
+
+ACEmulator Server software is published on github at this address: https://github.com/ACEmulator/ACE
+
 Dave Kerr's ConsoleControl code was modified for this project.
 
 The ConsoleControl's license is available here: 

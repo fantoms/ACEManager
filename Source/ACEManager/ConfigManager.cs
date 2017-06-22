@@ -8,7 +8,7 @@ namespace ACEManager
 {
     public struct Config
     {
-        [DefaultValue("%SYSTEMROOT%//ACEmulator//")]
+        [DefaultValue("..\\..\\..\\..\\Source\\ACEmulator\\Source\\ACE\\bin\\x64\\Debug\\")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string AceServerPath { get; set; }
 

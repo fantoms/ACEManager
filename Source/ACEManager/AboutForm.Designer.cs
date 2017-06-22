@@ -37,7 +37,7 @@
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox1.Location = new System.Drawing.Point(0, 0);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(534, 84);
+            this.richTextBox1.Size = new System.Drawing.Size(534, 175);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = resources.GetString("richTextBox1.Text");
             // 
@@ -45,11 +45,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(534, 84);
+            this.ClientSize = new System.Drawing.Size(534, 175);
             this.Controls.Add(this.richTextBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximumSize = new System.Drawing.Size(550, 700);
-            this.MinimumSize = new System.Drawing.Size(550, 0);
+            this.MinimumSize = new System.Drawing.Size(550, 39);
             this.Name = "AboutForm";
             this.Text = "About this tool...";
             this.ResumeLayout(false);
