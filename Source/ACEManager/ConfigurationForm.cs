@@ -24,33 +24,33 @@ namespace ACEManager
 
         private void PopulateForm()
         {
-            if (Program.Config.EnableAutoRestart)
+            if (ACEManager.Config.EnableAutoRestart)
                 this.chkBxAutoRestart.Checked = true;
-            if (Program.Config.SaveLogFile)
+            if (ACEManager.Config.SaveLogFile)
                 this.chkBxSaveLogFile.Checked = true;
-            txtBxAceServerPath.Text = Program.Config.AceServerPath;
-            txtBxAceServerExe.Text = Program.Config.AceServerExecutable;
-            txtBxAceServerArgs.Text = Program.Config.AceServerArguments;
-            txtBxLocalLogPath.Text = Program.Config.LocalLogPath;
-            txtBxLogDataFormat.Text = Program.Config.LogDataFormat;
-            txtBxLogFilenameFormat.Text = Program.Config.LogFilenameFormat;
+            txtBxAceServerPath.Text = ACEManager.Config.AceServerPath;
+            txtBxAceServerExe.Text = ACEManager.Config.AceServerExecutable;
+            txtBxAceServerArgs.Text = ACEManager.Config.AceServerArguments;
+            txtBxLocalLogPath.Text = ACEManager.Config.LocalLogPath;
+            txtBxLogDataFormat.Text = ACEManager.Config.LogDataFormat;
+            txtBxLogFilenameFormat.Text = ACEManager.Config.LogFilenameFormat;
         }
 
         private void SaveSettings()
         {
-            Program.Config.EnableAutoRestart = this.chkBxAutoRestart.Checked;
-            Program.Config.SaveLogFile = this.chkBxSaveLogFile.Checked;
-            Program.Config.AceServerPath = txtBxAceServerPath.Text;
-            Program.Config.AceServerExecutable = txtBxAceServerExe.Text;
-            Program.Config.AceServerArguments = txtBxAceServerArgs.Text;
-            Program.Config.LocalLogPath = txtBxLocalLogPath.Text;
-            Program.Config.LogDataFormat = txtBxLogDataFormat.Text;
-            Program.Config.LogFilenameFormat = txtBxLogFilenameFormat.Text;
-            Program.ConfigurationUpdated = true;
-            ConfigManager.Save(Program.Config);
+            ACEManager.Config.EnableAutoRestart = this.chkBxAutoRestart.Checked;
+            ACEManager.Config.SaveLogFile = this.chkBxSaveLogFile.Checked;
+            ACEManager.Config.AceServerPath = txtBxAceServerPath.Text;
+            ACEManager.Config.AceServerExecutable = txtBxAceServerExe.Text;
+            ACEManager.Config.AceServerArguments = txtBxAceServerArgs.Text;
+            ACEManager.Config.LocalLogPath = txtBxLocalLogPath.Text;
+            ACEManager.Config.LogDataFormat = txtBxLogDataFormat.Text;
+            ACEManager.Config.LogFilenameFormat = txtBxLogFilenameFormat.Text;
+            ACEManager.ConfigurationUpdated = true;
+            ConfigManager.Save(ACEManager.Config);
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void BtnSave_Click(object sender, EventArgs e)
         {
             SaveSettings();
             this.Close();

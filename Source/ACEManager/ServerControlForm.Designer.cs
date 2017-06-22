@@ -1,6 +1,6 @@
 ﻿namespace ACEManager
 {
-    public partial class FormServerControl
+    public partial class ServerControlForm
     {
         /// <summary>
         /// Required designer variable.
@@ -15,7 +15,11 @@
         {
             if (disposing && (components != null))
             {
+                statusBrush.Dispose();
                 components.Dispose();
+                // Dispose of other forms
+                ACEManager.ConfigurationForm.Dispose();
+                ACEManager.AboutForm.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -29,7 +33,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormServerControl));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ServerControlForm));
             this.btnKill = new System.Windows.Forms.Button();
             this.btnStopNow = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();

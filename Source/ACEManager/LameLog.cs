@@ -11,6 +11,7 @@ namespace ACEManager
     /// </summary>
     public class LameLog
     {
+        // Set's constants to be overriden by config defaults
         public const string LogFilenameFormat = "yyyy-M-dd_HH-mm-ss";
         public const string LogFilenameExt = ".log";
         public const string LogDataFormat = "yyyy-M-dd_HH-mm-ss.ffff";
@@ -25,7 +26,7 @@ namespace ACEManager
         {
             lock (_objectLock)
             {
-                if (Program.Config.SaveLogFile)
+                if (ACEManager.Config.SaveLogFile)
                     logStringsByTime.Add(DateTime.Now, logLine);
                 else
                     Console.WriteLine(logLine);
@@ -34,7 +35,7 @@ namespace ACEManager
 
         public void SaveLog()
         {
-            if (!Program.Config.SaveLogFile)
+            if (!ACEManager.Config.SaveLogFile)
             {
                 Console.WriteLine("Avoiding log save due to configuration setting.");
                 return;
@@ -46,19 +47,19 @@ namespace ACEManager
                 var logDataFormat = LogDataFormat;
 
                 // What IF: No CONFIG?!
-                if (!string.IsNullOrEmpty(Program.Config.LocalLogPath))
+                if (!string.IsNullOrEmpty(ACEManager.Config.LocalLogPath))
                 {
-                    logLocation = Program.Config.LocalLogPath;
+                    logLocation = ACEManager.Config.LocalLogPath;
                 }
 
-                if (!string.IsNullOrEmpty(Program.Config.LogFilenameFormat))
+                if (!string.IsNullOrEmpty(ACEManager.Config.LogFilenameFormat))
                 {
-                    logFilenameFormat = Program.Config.LogFilenameFormat;
+                    logFilenameFormat = ACEManager.Config.LogFilenameFormat;
                 }
 
-                if (!string.IsNullOrEmpty(Program.Config.LogDataFormat))
+                if (!string.IsNullOrEmpty(ACEManager.Config.LogDataFormat))
                 {
-                    logDataFormat = Program.Config.LogDataFormat;
+                    logDataFormat = ACEManager.Config.LogDataFormat;
                 }
 
                 var logFileName = DateTime.Now.ToString(logFilenameFormat) + LogFilenameExt;

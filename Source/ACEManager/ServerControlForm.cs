@@ -10,41 +10,11 @@ using System.Windows.Forms;
 using ConsoleControlAPI;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 
 namespace ACEManager
 {
-    public partial class FormServerControl : Form
+    public partial class ServerControlForm : Form
     {
-        // About form constants
-        // P/Invoke constants
-        private const int WM_SYSCOMMAND = 0x112;
-        private const int MF_STRING = 0x0;
-        private const int MF_SEPARATOR = 0x800;
-
-        // P/Invoke declarations
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern bool AppendMenu(IntPtr hMenu, int uFlags, int uIDNewItem, string lpNewItem);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern bool InsertMenu(IntPtr hMenu, int uPosition, int uFlags, int uIDNewItem, string lpNewItem);
-
-        /// <summary>
-        /// ID for the Config item on the system menu
-        /// </summary>
-        private const int ext_SYSMENU_CONFIG_ID = 0x1;
-        /// <summary>
-        /// ID for the Database Maintenance item on the system menu
-        /// </summary>
-        private const int ext_SYSMENU_DBMAINT_ID = 0x2;
-        /// <summary>
-        /// ID for the About item on the system menu
-        /// </summary>
-        private const int ext_SYSMENU_ABOUT_ID = 0x3;
-
         private string AceServerPath { get; set; }
         private string AceServerExecutable { get; set; }
         private string AceServerArguments { get; set; }
@@ -54,7 +24,7 @@ namespace ACEManager
         private bool exitingApplication = false;
         private bool processExited = false;
 
-        public FormServerControl()
+        public ServerControlForm()
         {
             InitializeComponent();
             AceServerPath = ConfigManager.StartingConfiguration.AceServerPath;
@@ -77,10 +47,10 @@ namespace ACEManager
 
         public void ReloadConfig()
         {
-            AceServerPath = Program.Config.AceServerPath;
-            AceServerArguments = Program.Config.AceServerArguments;
-            AceServerExecutable = Program.Config.AceServerExecutable;
-            if (Program.Config.EnableAutoRestart)
+            AceServerPath = ACEManager.Config.AceServerPath;
+            AceServerArguments = ACEManager.Config.AceServerArguments;
+            AceServerExecutable = ACEManager.Config.AceServerExecutable;
+            if (ACEManager.Config.EnableAutoRestart)
                 chkBxAutoRestart.Checked = true;
             else
                 chkBxAutoRestart.Checked = false;
@@ -148,7 +118,7 @@ namespace ACEManager
         {
             processExited = true;
             EchoCommand($"Process ended: {args.Content}");
-            Program.Log.AddLogLine(args.Content);
+            ACEManager.Log.AddLogLine(args.Content);
             UpdateStatus();
             ScrollConsole();
         }
@@ -158,7 +128,7 @@ namespace ACEManager
             if (!processExited)
             {
                 EchoCommand($"Process sent error: {args.Content}");
-                Program.Log.AddLogLine(args.Content);
+                ACEManager.Log.AddLogLine(args.Content);
                 UpdateStatus();
                 ScrollConsole();
             }
@@ -166,13 +136,13 @@ namespace ACEManager
 
         private void ProcessInterface_OnProcessInput(object sender, ProcessEventArgs args)
         {
-            Program.Log.AddLogLine(args.Content);
+            ACEManager.Log.AddLogLine(args.Content);
             ScrollConsole();
         }
 
         private void ProcessInterface_OnProcessOutput(object sender, ProcessEventArgs args)
         {
-            Program.Log.AddLogLine(args.Content);
+            ACEManager.Log.AddLogLine(args.Content);
             ScrollConsole();
         }
 
@@ -262,19 +232,19 @@ namespace ACEManager
 
         private void TimerUpdateStatus_Tick(object sender, EventArgs e)
         {
-            if (!ProcessInterface.IsProcessRunning && Program.Config.EnableAutoRestart)
+            if (!ProcessInterface.IsProcessRunning && ACEManager.Config.EnableAutoRestart)
             {
                 var msg = $"Restarting @ {DateTime.UtcNow.ToString("MM-dd-yyyy hh:mm:ss")}";
-                Program.Log.AddLogLine(msg);
+                ACEManager.Log.AddLogLine(msg);
                 EchoCommand(msg);
                 StartServer();
                 UpdateStatus();
             }
 
-            if (Program.ConfigurationUpdated)
+            if (ACEManager.ConfigurationUpdated)
             {
                 ReloadConfig();
-                Program.ConfigurationUpdated = false;
+                ACEManager.ConfigurationUpdated = false;
             }
         }
 
@@ -285,7 +255,7 @@ namespace ACEManager
 
         private void ChkBxAutoRestart_CheckedChanged(object sender, EventArgs e)
         {
-            Program.Config.EnableAutoRestart = chkBxAutoRestart.Checked;
+            ACEManager.Config.EnableAutoRestart = chkBxAutoRestart.Checked;
         }
 
         protected override void OnHandleCreated(EventArgs e)
@@ -294,36 +264,36 @@ namespace ACEManager
             // Adapted from Cody Gray's menu context append: https://stackoverflow.com/users/366904/cody-gray
 
             // Get a handle to a copy of this form's system (window) menu
-            IntPtr hSysMenu = GetSystemMenu(this.Handle, false);
+            IntPtr hSysMenu = NativeMethods.GetSystemMenu(this.Handle, false);
 
             // Add a separator
-            AppendMenu(hSysMenu, MF_SEPARATOR, 0, string.Empty);
+            NativeMethods.AppendMenu(hSysMenu, NativeMethods.MF_SEPARATOR, 0, string.Empty);
 
             // Add the menu items
-            AppendMenu(hSysMenu, MF_STRING, ext_SYSMENU_CONFIG_ID, "&Application Settings…");
-            AppendMenu(hSysMenu, MF_STRING, ext_SYSMENU_DBMAINT_ID, "&Database Maintenance (coming soon)…");
-            AppendMenu(hSysMenu, MF_STRING, ext_SYSMENU_ABOUT_ID, "&About…");
+            NativeMethods.AppendMenu(hSysMenu, NativeMethods.MF_STRING, NativeMethods.ext_SYSMENU_CONFIG_ID, "&Application Settings…");
+            NativeMethods.AppendMenu(hSysMenu, NativeMethods.MF_STRING, NativeMethods.ext_SYSMENU_DBMAINT_ID, "&Database Maintenance (coming soon)…");
+            NativeMethods.AppendMenu(hSysMenu, NativeMethods.MF_STRING, NativeMethods.ext_SYSMENU_ABOUT_ID, "&About…");
         }
 
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
 
-            if (m.Msg == WM_SYSCOMMAND)
+            if (m.Msg == NativeMethods.WM_SYSCOMMAND)
                 switch ((int)m.WParam)
                 {
-                    case ext_SYSMENU_CONFIG_ID:
+                    case NativeMethods.ext_SYSMENU_CONFIG_ID:
                         {
-                            Program.ConfigurationForm.ShowDialog();
+                            ACEManager.ConfigurationForm.ShowDialog();
                             break;
                         }
-                    case ext_SYSMENU_DBMAINT_ID:
+                    case NativeMethods.ext_SYSMENU_DBMAINT_ID:
                         {
                             break;
                         }
-                    case ext_SYSMENU_ABOUT_ID:
+                    case NativeMethods.ext_SYSMENU_ABOUT_ID:
                         {
-                            Program.AboutForm.ShowDialog();
+                            ACEManager.AboutForm.ShowDialog();
                             break;
                         }
                 }
@@ -348,12 +318,12 @@ namespace ACEManager
                         // Disables connection watcher, allowing thread to exit
                         ProcessInterface.StopProcess();
                         exitingApplication = true;
-                        Program.Log.AddLogLine("Exiting...");
+                        ACEManager.Log.AddLogLine("Exiting...");
                         break;
                 }
             } else
             {
-                Program.Log.AddLogLine("Exiting...");
+                ACEManager.Log.AddLogLine("Exiting...");
             }
         }
     }

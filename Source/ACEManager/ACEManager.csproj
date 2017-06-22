@@ -85,13 +85,14 @@
     <Compile Include="ConfigurationForm.Designer.cs">
       <DependentUpon>ConfigurationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormServerControl.cs">
+    <Compile Include="ServerControlForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormServerControl.Designer.cs">
-      <DependentUpon>FormServerControl.cs</DependentUpon>
+    <Compile Include="ServerControlForm.Designer.cs">
+      <DependentUpon>ServerControlForm.cs</DependentUpon>
     </Compile>
     <Compile Include="LameLog.cs" />
+    <Compile Include="NativeMethods.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TupleList.cs" />
@@ -101,8 +102,8 @@
     <EmbeddedResource Include="ConfigurationForm.resx">
       <DependentUpon>ConfigurationForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormServerControl.resx">
-      <DependentUpon>FormServerControl.cs</DependentUpon>
+    <EmbeddedResource Include="ServerControlForm.resx">
+      <DependentUpon>ServerControlForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -6,19 +6,31 @@ using System.Windows.Forms;
 
 namespace ACEManager
 {
-    public static class Program
+    public static class ACEManager
     {
         /// <summary>
         /// LameLog is a simple text logger.
         /// </summary>
         public static LameLog Log = new LameLog();
 
+        /// <summary>
+        /// The main Configuration of the program.
+        /// </summary>
         public static Config Config;
 
+        /// <summary>
+        /// About Form to show license and credits.
+        /// </summary>
         public static AboutForm AboutForm;
 
+        /// <summary>
+        /// Main configuration GUI that changes the application settings.
+        /// </summary>
         public static ConfigurationForm ConfigurationForm;
 
+        /// <summary>
+        /// Event registered boolean set to true when configuration has been updated from the ConfigurationForm.
+        /// </summary>
         public static bool ConfigurationUpdated;
 
         /// <summary>
@@ -53,21 +65,24 @@ namespace ACEManager
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            // Instance the forms
             AboutForm = new AboutForm();
             ConfigurationForm = new ConfigurationForm();
 
-            Application.Run(new FormServerControl());
+            // Run main
+            Application.Run(new ServerControlForm());
 
             // Finish
             if (!Config.Equals(ConfigManager.StartingConfiguration))
                 ConfigManager.Save(Config);
 
-            ConfigurationForm.Dispose();
-            AboutForm.Dispose();
-
+            // Finally append exit to log
             Log.AddLogLine("...Exiting.");
         }
 
+        /// <summary>
+        /// Saves the log when the application exits.
+        /// </summary>
         private static void OnProcessExit(object sender, EventArgs e)
         {
             Log.SaveLog();
