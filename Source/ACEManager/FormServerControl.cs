@@ -301,7 +301,7 @@ namespace ACEManager
 
             // Add the menu items
             AppendMenu(hSysMenu, MF_STRING, ext_SYSMENU_CONFIG_ID, "&Application Settings…");
-            AppendMenu(hSysMenu, MF_STRING, ext_SYSMENU_DBMAINT_ID, "&Database Maintenance…");
+            AppendMenu(hSysMenu, MF_STRING, ext_SYSMENU_DBMAINT_ID, "&Database Maintenance (coming soon)…");
             AppendMenu(hSysMenu, MF_STRING, ext_SYSMENU_ABOUT_ID, "&About…");
         }
 
