@@ -4,6 +4,8 @@
 
 **ACEManager is a server wrapper GUI tool, that can be used to control the functionality of the ACEMulator server. This tool only supports ACEmulator.**
 
+<img src=http://i.imgur.com/68J0UBS.png>
+
 ***
 
 ## Getting Started
