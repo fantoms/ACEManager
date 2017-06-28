@@ -232,6 +232,20 @@ namespace ACEManager
 
         private void TimerUpdateStatus_Tick(object sender, EventArgs e)
         {
+            // Check for configuration changes first.
+            if (ACEManager.ConfigurationUpdateRequired)
+            {
+                var msg = $"Reloading configuration @ {DateTime.UtcNow.ToString("MM-dd-yyyy hh:mm:ss")}";
+                ACEManager.Log.AddLogLine(msg);
+                EchoCommand(msg);
+                ReloadConfig();
+                msg = $"Server Path: {AceServerPath}\\{AceServerExecutable} {AceServerArguments}";
+                ACEManager.Log.AddLogLine(msg);
+                EchoCommand(msg);
+                ACEManager.ConfigurationUpdateRequired = false;
+            }
+
+            // Keep restarted if the setting is enabled.
             if (!ProcessInterface.IsProcessRunning && ACEManager.Config.EnableAutoRestart)
             {
                 var msg = $"Restarting @ {DateTime.UtcNow.ToString("MM-dd-yyyy hh:mm:ss")}";
@@ -239,12 +253,6 @@ namespace ACEManager
                 EchoCommand(msg);
                 StartServer();
                 UpdateStatus();
-            }
-
-            if (ACEManager.ConfigurationUpdated)
-            {
-                ReloadConfig();
-                ACEManager.ConfigurationUpdated = false;
             }
         }
 

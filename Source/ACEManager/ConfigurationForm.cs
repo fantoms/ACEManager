@@ -46,7 +46,7 @@ namespace ACEManager
             ACEManager.Config.LocalLogPath = txtBxLocalLogPath.Text;
             ACEManager.Config.LogDataFormat = txtBxLogDataFormat.Text;
             ACEManager.Config.LogFilenameFormat = txtBxLogFilenameFormat.Text;
-            ACEManager.ConfigurationUpdated = true;
+            ACEManager.ConfigurationUpdateRequired = true;
             ConfigManager.Save(ACEManager.Config);
         }
 

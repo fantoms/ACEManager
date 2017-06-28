@@ -31,7 +31,7 @@ namespace ACEManager
         /// <summary>
         /// Event registered boolean set to true when configuration has been updated from the ConfigurationForm.
         /// </summary>
-        public static bool ConfigurationUpdated;
+        public static bool ConfigurationUpdateRequired;
 
         /// <summary>
         /// The main entry point for the application.
