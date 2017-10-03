@@ -80,11 +80,22 @@ namespace ACEManager
         /// </summary>
         public void UpdateStatus()
         {
+            if (lblRunningStatus.InvokeRequired)
+            {
+                lblRunningStatus.Invoke(new MethodInvoker(delegate
+                {
+                    lblRunningStatus.Text = @"Server: " + (ProcessInterface.IsProcessRunning == true ? "Running" : "Stopped");
+                }));
+            }
+            else
+            {
+                lblRunningStatus.Text = @"Server: " + (ProcessInterface.IsProcessRunning == true ? "Running" : "Stopped");
+            }
+
             if (!exitingApplication)
             {
                 statusBrush.Color = (ProcessInterface.IsProcessRunning == true ? Color.LimeGreen : Color.Red);
                 Graphics.FillEllipse(statusBrush, new Rectangle(4, 4, 32, 32));
-                lblRunningStatus.Text = @"Server: " + (ProcessInterface.IsProcessRunning == true ? "Running" : "Stopped");
             }
         }
         
@@ -125,13 +136,14 @@ namespace ACEManager
 
         private void ProcessInterface_OnProcessError(object sender, ProcessEventArgs args)
         {
-            if (!processExited)
-            {
-                EchoCommand($"Process sent error: {args.Content}");
-                ACEManager.Log.AddLogLine(args.Content);
-                UpdateStatus();
-                ScrollConsole();
-            }
+            if (args.Content.Length > 0 || args.Code != null)
+                if (!processExited)
+                {
+                    EchoCommand($"Process sent error: {args.Content}");
+                    ACEManager.Log.AddLogLine(args.Content);
+                    UpdateStatus();
+                    ScrollConsole();
+                }
         }
 
         private void ProcessInterface_OnProcessInput(object sender, ProcessEventArgs args)
@@ -148,12 +160,23 @@ namespace ACEManager
 
         private void ScrollConsole()
         {
-            if (!exitingApplication)
+            if (consoleControl1.InvokeRequired)
             {
-                // Locate end of console
-                consoleControl1.InternalRichTextBox.SelectionStart = consoleControl1.InternalRichTextBox.Text.Length;
-                // Scroll to it
-                consoleControl1.InternalRichTextBox.ScrollToCaret();
+                consoleControl1.Invoke(new MethodInvoker(delegate
+                {
+                    consoleControl1.InternalRichTextBox.SelectionStart = consoleControl1.InternalRichTextBox.Text.Length;
+                    consoleControl1.InternalRichTextBox.ScrollToCaret();
+                }));
+            }
+            else
+            {
+                if (!exitingApplication)
+                {
+                    // Locate end of console
+                    consoleControl1.InternalRichTextBox.SelectionStart = consoleControl1.InternalRichTextBox.Text.Length;
+                    // Scroll to it
+                    consoleControl1.InternalRichTextBox.ScrollToCaret();
+                }
             }
         }
 
