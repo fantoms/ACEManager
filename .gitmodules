@@ -9,7 +9,8 @@
 	url = https://github.com/ACEmulator/ACE-World.git
 [submodule "Source/aclogview"]
 	path = Source/aclogview
-	url = https://github.com/tfarley/aclogview
+	url = https://github.com/ACEmulator/aclogview
+	branch = ACE
 [submodule "Source/aclog"]
 	path = Source/aclog
 	url = https://github.com/tfarley/aclog
