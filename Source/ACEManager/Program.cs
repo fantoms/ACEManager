@@ -29,6 +29,11 @@ namespace ACEManager
         public static ConfigurationForm ConfigurationForm;
 
         /// <summary>
+        /// Database Maintenance form to create, update, or delete database tables.
+        /// </summary>
+        public static DatabaseMaintenanceForm DatabaseMaintenanceForm;
+
+        /// <summary>
         /// Event registered boolean set to true when configuration has been updated from the ConfigurationForm.
         /// </summary>
         public static bool ConfigurationUpdateRequired;
@@ -68,6 +73,7 @@ namespace ACEManager
             // Instance the forms
             AboutForm = new AboutForm();
             ConfigurationForm = new ConfigurationForm();
+            DatabaseMaintenanceForm = new DatabaseMaintenanceForm();            
 
             // Run main
             Application.Run(new ServerControlForm());

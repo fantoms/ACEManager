@@ -302,7 +302,7 @@ namespace ACEManager
 
             // Add the menu items
             NativeMethods.AppendMenu(hSysMenu, NativeMethods.MF_STRING, NativeMethods.ext_SYSMENU_CONFIG_ID, "&Application Settings…");
-            NativeMethods.AppendMenu(hSysMenu, NativeMethods.MF_STRING, NativeMethods.ext_SYSMENU_DBMAINT_ID, "&Database Maintenance (coming soon)…");
+            NativeMethods.AppendMenu(hSysMenu, NativeMethods.MF_STRING, NativeMethods.ext_SYSMENU_DBMAINT_ID, "&Database Maintenance…");
             NativeMethods.AppendMenu(hSysMenu, NativeMethods.MF_STRING, NativeMethods.ext_SYSMENU_ABOUT_ID, "&About…");
         }
 
@@ -320,6 +320,7 @@ namespace ACEManager
                         }
                     case NativeMethods.ext_SYSMENU_DBMAINT_ID:
                         {
+                            ACEManager.DatabaseMaintenanceForm.ShowDialog();
                             break;
                         }
                     case NativeMethods.ext_SYSMENU_ABOUT_ID:
