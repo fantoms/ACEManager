@@ -68,8 +68,8 @@ namespace ACEManager
                 {
                     var logFile = File.OpenWrite(logLocation + logFileName);
                     foreach (Tuple<DateTime, string> kvp in this.logStringsByTime)
-                    {
-                        byte[] line = Encoding.ASCII.GetBytes($"{kvp.Item1.ToString(logDataFormat)} : {kvp.Item2}\r\n");
+                    {                        
+                        byte[] line = Encoding.ASCII.GetBytes($"{kvp.Item1.ToString(logDataFormat)} : {kvp.Item2} {Environment.NewLine}");
                         logFile.Write(line, 0, line.Length);
                     }
                     logFile.Close();

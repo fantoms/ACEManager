@@ -54,7 +54,7 @@ namespace ACEManager
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.ToString(), "Unknown Error", MessageBoxButtons.OK);
+                MessageBox.Show("Configuration Errors! Check your Config!\n" + exception.Message, "Unknown Error", MessageBoxButtons.OK);
                 Log.AddLogLine(exception.ToString());
             }
 

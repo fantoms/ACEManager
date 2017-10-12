@@ -599,7 +599,9 @@
             this.Controls.Add(this.groupBoxDatabase);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(920, 379);
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(920, 379);
             this.Name = "DatabaseMaintenanceForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Database Maintenance";

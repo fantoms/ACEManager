@@ -7,7 +7,7 @@ using System.Security;
 using System.Security.Permissions;
 
 namespace ACEManager
-{
+{ 
     public struct Config
     {
         [DefaultValue("..\\..\\..\\..\\Source\\ACEmulator\\Source\\ACE\\bin\\x64\\Debug\\")]
@@ -68,7 +68,7 @@ namespace ACEManager
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string WorldDatabaseName { get; set; }
 
-        [DefaultValue(".\\Database")]
+        [DefaultValue("Database")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string DataRepository { get; set; }
 
@@ -76,15 +76,15 @@ namespace ACEManager
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public bool AdvancedMode { get; set; }
 
-        [DefaultValue("\\Updates\\Authentication")]
+        [DefaultValue("Updates\\Authentication")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string AuthenticationUpdatesPath { get; set; }
 
-        [DefaultValue("\\Updates\\Shard")]
+        [DefaultValue("Updates\\Shard")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string ShardUpdatesPath { get; set; }
 
-        [DefaultValue("\\Updates\\World")]
+        [DefaultValue("Updates\\World")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string WorldUpdatesPath { get; set; }
         /// <summary>
@@ -138,6 +138,14 @@ namespace ACEManager
         [DefaultValue("WorldBase.sql")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string WorldBaseSqlFilename { get; set; }
+
+        [DefaultValue(false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public bool HardModeReached { get; set; }
+
+        [DefaultValue(false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public bool YouveBeenWarned { get; set; }
     }
 
     public static class ConfigManager
@@ -148,6 +156,16 @@ namespace ACEManager
         public static Config StartingConfiguration { get; set; }
 
         public static string ConfigFile { get; private set; }
+
+        public static bool SetDataPath()
+        {
+            if (StartingConfiguration.DataRepository.Length > 0)
+            {
+                DataPath = Path.GetFullPath(StartingConfiguration.DataRepository);
+                return true;
+            }
+            return false;
+        }
 
         public static void ThrowConfigError(Exception exception)
         {
@@ -191,34 +209,18 @@ namespace ACEManager
                 if (StartingConfiguration.DataRepository.Length > 0)
                 {
                     // test if directory is exists
-                    if (!Directory.Exists(StartingConfiguration.DataRepository))
+                    if (!Directory.Exists(Path.GetFullPath(StartingConfiguration.DataRepository)))
                     {
                         string newPath = Path.GetFullPath(StartingConfiguration.DataRepository);
-                        try
+
+                        if (ACEManager.Log != null)
                         {
-                            Directory.CreateDirectory(newPath);
-                            var updatePath = Path.Combine(newPath, "Updates\\");
-                            Directory.CreateDirectory(updatePath);
-                            Directory.CreateDirectory(Path.Combine(updatePath, "Authentication\\"));
-                            Directory.CreateDirectory(Path.Combine(updatePath, "Shard\\"));
-                            Directory.CreateDirectory(Path.Combine(updatePath, "Word\\"));
+                            ACEManager.Log.AddLogLine($"Config Load Error: Invalid DataRepository Path in config! {newPath} is invalid.");
                         }
-                        catch (Exception exception)
-                        {
-                            if (ACEManager.Log != null)
-                            {
-                                ACEManager.Log.AddLogLine($"Config Load Error: { exception.Message}");
-                            }
-                            ConfigurationLoaded = false;
-                            ThrowConfigError(exception);
-                            throw;
-                        }
-                        finally
-                        {
-                            DataPath = newPath;
-                            DataPathAvailable = true;
-                        }
+
+                        DataPathAvailable = false;
                     }
+                    // Directory exists, now we test permissions
                     else
                     {
                         string absolutePath = "";
@@ -270,7 +272,37 @@ namespace ACEManager
 
         public static void ApplyDefaults()
         {
-            StartingConfiguration = new Config() { AceServerPath = "%SYSTEMROOT%//ACEmulator//", AceServerExecutable = "ACE.exe", AceServerArguments = "", EnableAutoRestart = false, SaveLogFile = true, LocalLogPath = @"ACEManagerLog_", LogDataFormat = "yyyy-M-dd_HH-mm-ss.ffff", LogFilenameFormat = "yyyy-M-dd_HH-mm-ss" };
+            StartingConfiguration = new Config() {
+                AceServerPath = "%SYSTEMROOT%//ACEmulator//",
+                AceServerExecutable = "ACE.exe",
+                AceServerArguments = "",
+                AdvancedMode = false,
+                AuthDatabaseName = "ace_auth",
+                AuthenticationBaseSqlFilename = "AuthenticationBase.sql",
+                AuthenticationBaseSqlUrl = "https://raw.githubusercontent.com/ACEmulator/ACE/master/Database/Base/AuthenticationBase.sql",
+                AuthenticationUpdatesPath = "Updates\\Authentication",
+                AuthenticationUpdatesSqlUrl = "https://api.github.com/repositories/79078680/contents/Database/Updates/Authentication",
+                DatabaseHost = "127.0.0.1",
+                DatabasePassword = "",
+                DatabasePort = 3306,
+                DatabaseUsername = "root",
+                DataRepository = ".\\Database",
+                EnableAutoRestart = false,
+                GithubURL = "https://api.github.com/repos/ACEmulator/ACE-World/releases/latest",
+                ShardBaseSqlFilename = "ShardBase.sql",
+                ShardBaseSqlUrl = "https://raw.githubusercontent.com/ACEmulator/ACE/master/Database/Base/ShardBase.sql",
+                ShardDatabaseName = "ace_shard",
+                ShardUpdatesPath = "Updates\\Shard",
+                ShardUpdatesSqlUrl = "https://api.github.com/repositories/79078680/contents/Database/Updates/Shard",
+                WorldBaseSqlFilename = "WorldBase.sql",
+                WorldBaseSqlUrl = "https://raw.githubusercontent.com/ACEmulator/ACE/master/Database/Base/WorldBase.sql",
+                WorldDatabaseName = "ace_world",
+                WorldUpdatesPath = "Updates\\World",
+                WorldUpdatesSqlUrl = "https://api.github.com/repositories/79078680/contents/Database/Updates/World",
+                SaveLogFile = true,
+                LocalLogPath = @"ACEManagerLog_",
+                LogDataFormat = "yyyy-M-dd_HH-mm-ss.ffff",
+                LogFilenameFormat = "yyyy-M-dd_HH-mm-ss" };
             ConfigurationLoaded = true;
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿/// There are plans in the future to include backup capabilities, and they have already been wired in.
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +16,9 @@ using System.IO;
 using System.IO.Compression;
 using System.Data.SqlClient;
 using MySql.Data.MySqlClient;
+using System.Security;
+using System.Security.Permissions;
+using System.Collections.ObjectModel;
 
 namespace ACEManager
 {
@@ -57,6 +61,8 @@ namespace ACEManager
 
         private static bool DisableWarnings { get; set; }
 
+        private static readonly ReadOnlyCollection<string> DefaultDbNames = new ReadOnlyCollection<string>(new[] { "ace_auth", "ace_shard", "ace_world" });
+
         public DatabaseMaintenanceForm()
         {
             InitializeComponent();
@@ -83,7 +89,14 @@ namespace ACEManager
 
         private void DatabaseMaintenanceForm_Load(object sender, EventArgs e)
         {
-            // reset progress text
+            if (!ACEManager.Config.YouveBeenWarned)
+            {
+                if (!YouveBeenWarned())
+                {
+                    this.Close();
+                    return;
+                }
+            }
             PopulateForm();
         }
 
@@ -114,24 +127,26 @@ namespace ACEManager
         {
             // Create missing folders, if needed.
 
-            if (!Directory.Exists(ConfigManager.DataPath + ACEManager.Config.AuthenticationUpdatesPath)) Directory.CreateDirectory(ConfigManager.DataPath + ACEManager.Config.AuthenticationUpdatesPath);
-            if (!Directory.Exists(ConfigManager.DataPath + ACEManager.Config.ShardUpdatesPath)) Directory.CreateDirectory(ConfigManager.DataPath + ACEManager.Config.ShardUpdatesPath);
-            if (!Directory.Exists(ConfigManager.DataPath + ACEManager.Config.WorldUpdatesPath)) Directory.CreateDirectory(ConfigManager.DataPath + ACEManager.Config.WorldUpdatesPath);
+            if (!CheckRepository())
+            {
+                LogText("Error in data repository, click download data again!");
+                return;
+            }
 
             var authfiles = JArray.Parse(GetWebString(ACEManager.Config.AuthenticationUpdatesSqlUrl));
             foreach (var item in authfiles)
             {
-                GetWebContent(item["download_url"].ToString(), Path.Combine(ConfigManager.DataPath + ACEManager.Config.AuthenticationUpdatesPath, item["name"].ToString()));
+                GetWebContent(item["download_url"].ToString(), Path.Combine(ConfigManager.DataPath, ACEManager.Config.AuthenticationUpdatesPath, item["name"].ToString()));
             }
             var shardfiles = JArray.Parse(GetWebString(ACEManager.Config.ShardUpdatesSqlUrl));
             foreach (var item in shardfiles)
             {
-                GetWebContent(item["download_url"].ToString(), Path.Combine(ConfigManager.DataPath + ACEManager.Config.ShardUpdatesPath, item["name"].ToString()));
+                GetWebContent(item["download_url"].ToString(), Path.Combine(ConfigManager.DataPath, ACEManager.Config.ShardUpdatesPath, item["name"].ToString()));
             }
             var worldfiles = JArray.Parse(GetWebString(ACEManager.Config.WorldUpdatesSqlUrl));
             foreach (var item in worldfiles)
             {
-                GetWebContent(item["download_url"].ToString(), Path.Combine(ConfigManager.DataPath + ACEManager.Config.WorldUpdatesPath, item["name"].ToString()));
+                GetWebContent(item["download_url"].ToString(), Path.Combine(ConfigManager.DataPath, ACEManager.Config.WorldUpdatesPath, item["name"].ToString()));
             }
         }
 
@@ -165,6 +180,7 @@ namespace ACEManager
 
         private void SaveSettings()
         {
+            ACEManager.Config.AdvancedMode = chkBxAdvanced.Checked;
             ACEManager.Config.AuthDatabaseName = txtBxDBAuthName.Text;
             ACEManager.Config.ShardDatabaseName = txtBxDBShardName.Text;
             ACEManager.Config.WorldDatabaseName = txtBxDBWorldName.Text;
@@ -273,6 +289,13 @@ namespace ACEManager
             {
                 // open fild into string
                 string sqlInputFile = File.ReadAllText(sqlFile);
+                if (!DefaultDbNames.Contains(databaseName))
+                    if (DefaultDbNames.Any(sqlInputFile.Contains))
+                    {
+                        sqlInputFile = sqlInputFile.Replace("ace_auth", databaseName);
+                        sqlInputFile = sqlInputFile.Replace("ace_shard", databaseName);
+                        sqlInputFile = sqlInputFile.Replace("ace_world", databaseName);
+                    }
                 var result = Database.Execute(sqlInputFile, databaseName);
 
                 if (result.Length > 0)
@@ -294,7 +317,7 @@ namespace ACEManager
             // Database.Reset();
             try
             {
-                var updateRepo = Path.Combine(ConfigManager.DataPath + updatePath);
+                var updateRepo = Path.Combine(ConfigManager.DataPath, updatePath);
                 var files = from file in Directory.EnumerateFiles(updateRepo) where !file.Contains(".txt") select new { File = file };
 
                 if (files.Count() == 0)
@@ -320,6 +343,13 @@ namespace ACEManager
                     {
                         // open fild into string
                         string sqlInputFile = File.ReadAllText(sqlFile);
+                        if (!DefaultDbNames.Contains(databaseName))
+                            if (DefaultDbNames.Any(sqlInputFile.Contains))
+                            {
+                                sqlInputFile = sqlInputFile.Replace("ace_auth", databaseName);
+                                sqlInputFile = sqlInputFile.Replace("ace_shard", databaseName);
+                                sqlInputFile = sqlInputFile.Replace("ace_world", databaseName);
+                            }
                         var result = Database.ExecuteScript(sqlInputFile, databaseName);
                         if (result.Length > 0)
                         {
@@ -345,10 +375,10 @@ namespace ACEManager
                 LogText("Canceled action!");
                 return false;
             }
-            string dbName;
+            string databaseName;
             if (txtBxDBWorldName.TextLength > 0)
             {
-                dbName = txtBxDBWorldName.Text;
+                databaseName = txtBxDBWorldName.Text;
             }
             else
             {
@@ -373,7 +403,12 @@ namespace ACEManager
                         // open fild into string
                         LogText("Loading ACE-World, may take quite awhile (please wait)!...");
                         string sqlInputFile = File.ReadAllText(sqlFile);
-                        var result = Database.ExecuteScript(sqlInputFile, dbName);
+                        if (!DefaultDbNames.Contains(databaseName))
+                            if (DefaultDbNames.Any(sqlInputFile.Contains))
+                            {
+                                sqlInputFile = sqlInputFile.Replace("ace_world", databaseName);
+                            }
+                        var result = Database.ExecuteScript(sqlInputFile, databaseName);
                         if (result.Length > 0)
                         {
                             LogText(result);
@@ -417,6 +452,28 @@ namespace ACEManager
             txtBxDBLog.AppendText(logData);
         }
 
+        private bool YouveBeenWarned()
+        {
+            string message = "This software is in an experimental stage. If you use this, note that there is a chance your database will be lost or broken.\nIf this does not suite your taste, please wait until proper testing can be performed and do not use this product.";
+            if (WarnUser(message))
+            {
+                ACEManager.Config.YouveBeenWarned = true;
+                return true;
+            }
+            return false;
+        }
+        
+        private bool HardMode()
+        {
+            string message = "This software is in an experimental stage. If you use this, note that there is a chance your database will be lost or broken.\nYou've chosen to turn on the advanced settings, so please note that you can break your database with the wrong click!";
+            if (WarnUser(message))
+            {
+                ACEManager.Config.HardModeReached = true;
+                return true;
+            }
+            return false;
+        }
+
         private bool WarnUser(string message = "")
         {
             if (DisableWarnings) return true;
@@ -427,23 +484,75 @@ namespace ACEManager
                 return false;
         }
 
-        private bool DownloadUpdates()
+        private bool CheckRepository()
         {
-            LogText("Downloading all data from github...");
-            try
+            if (ConfigManager.DataPath == null)
             {
-                GetACEWorldMetaData();
-                GetLatestACEWorldData();
-                GetBaseSql();
-                GetAllUpdates();
-                ExtractZip(Path.Combine(ConfigManager.DataPath, GithubFilename), Path.Combine(ConfigManager.DataPath, "ACE-World\\"));
+                ConfigManager.SetDataPath();
             }
-            catch (Exception error)
+
+            string dataRepository = ConfigManager.DataPath;
+            // Testing to see if we can save data in the path saved in the config
+            if (dataRepository?.Length > 0)
             {
-                LogText(error.Message);
+                // test if directory is exists
+                if (!Directory.Exists(dataRepository))
+                {
+                    Directory.CreateDirectory(dataRepository);
+                    var pathtest = Path.Combine(dataRepository, ACEManager.Config.ShardUpdatesPath);
+                    Directory.CreateDirectory(Path.GetFullPath(Path.Combine(dataRepository, ACEManager.Config.AuthenticationUpdatesPath)));
+                    Directory.CreateDirectory(Path.GetFullPath(Path.Combine(dataRepository, ACEManager.Config.ShardUpdatesPath)));
+                    Directory.CreateDirectory(Path.GetFullPath(Path.Combine(dataRepository, ACEManager.Config.WorldUpdatesPath)));
+                }
+                else
+                {
+                    string absolutePath = Path.GetFullPath(dataRepository);
+                    // exists, can we write?
+                    PermissionSet perms = new PermissionSet(PermissionState.None);
+                    FileIOPermission writePermission = new FileIOPermission(FileIOPermissionAccess.Write, absolutePath);
+                    perms.AddPermission(writePermission);
+
+                    if (!perms.IsSubsetOf(AppDomain.CurrentDomain.PermissionSet))
+                    {
+                        // You don't have write permissions
+                        LogText("Could not load or create the data directory, cannot write too the directory!");
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                LogText("Config Error: Invalid Path!");
                 return false;
             }
             return true;
+        }
+
+        private bool DownloadUpdates()
+        {
+            LogText("Downloading all data from github...");
+            if (CheckRepository())
+            {
+                try
+                {
+                    GetACEWorldMetaData();
+                    GetLatestACEWorldData();
+                    GetBaseSql();
+                    GetAllUpdates();
+                    ExtractZip(Path.Combine(ConfigManager.DataPath, GithubFilename), Path.Combine(ConfigManager.DataPath, "ACE-World\\"));
+                }
+                catch (Exception error)
+                {
+                    LogText(error.Message);
+                    return false;
+                }
+                return true;
+            }
+            else
+            {
+                LogText($"Error! Could not download into {ACEManager.Config.DataRepository}");
+                return false;
+            }
         }
 
         private bool ClearDatabase(string databaseName, bool disableWarnings)
@@ -651,6 +760,14 @@ namespace ACEManager
             if (chkBxAdvanced.CheckState == CheckState.Checked)
             {
                 // grpBackupRestore.Visible = true;
+                if (!ACEManager.Config.HardModeReached)
+                {
+                    if (!HardMode())
+                    {
+                        chkBxAdvanced.Checked = false;
+                        return;
+                    }
+                }
                 grpCreatDelete.Visible = true;
                 ACEManager.Config.AdvancedMode = true;
             }
