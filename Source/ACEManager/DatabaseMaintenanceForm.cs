@@ -1,5 +1,4 @@
-﻿/// There are plans in the future to include backup capabilities, and they have already been wired in.
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -576,7 +575,7 @@ namespace ACEManager
         private bool DownloadUpdates()
         {
             LogText("Downloading all data from github...");
-            if (CheckBackupPath())
+            if (CheckDataPath())
             {
                 try
                 {
@@ -614,46 +613,10 @@ namespace ACEManager
                 }
             }
 
-            string result = string.Empty;
-            try
+            string result = Database.TruncateTables(databaseName);
+            if (result.Length > 0)
             {
-                result = Database.TruncateTables(databaseName);
-            }
-            catch (SqlException ex)
-            {
-                var errMsg = $"SQL connecting: {ex.Message}";
-                LogText(errMsg);
-                return false;
-            }
-            catch (MySqlException ex)
-            {
-                var errMsg = "Error: ";
-                // get the number from the inner exception
-                if (ex.InnerException != null)
-                {
-                    var mySqlErrorNumber = Database.GetExceptionNumber(ex);
-                    // create a short error message for the console log / label
-                    errMsg += $"{mySqlErrorNumber} : {ex.InnerException.Message}";
-                }
-                else
-                {
-                    errMsg += $"{ex.Message}";
-                }
-                // long message to console
-                LogText(errMsg);
-                return false;
-            }
-            catch (Exception error)
-            {
-                LogText(error.Message);
-                return false;
-            }
-            finally
-            {
-                if (result.Length > 0)
-                {
-                    LogText(result);
-                }
+                LogText(result);
             }
 
             if (!disableWarnings)
@@ -661,82 +624,52 @@ namespace ACEManager
             return true;
         }
 
-        private bool BackupDatabase(string databaseName)
+        private bool BackupDatabase(string databaseName, int defaultDatabase)
         {
             // Check the Backup dirctory permission
             if (!CheckBackupPath()) return false;
-            try
+            var newFilePath = Path.GetFullPath(Path.Combine(ConfigManager.BackupPath, databaseName + "." + DateTime.Now.ToString("yyyy-dd-M-HH-mm-ss") + ".sqldump"));
+            var result = Database.BackupDatabase(newFilePath, databaseName);
+            if (result.Length > 0)
             {
-                Database.BackupDatabase(Path.GetFullPath(ConfigManager.BackupPath + "\\" + databaseName + "." + DateTime.Now.ToString("yyyy-dd-M-HH-mm-ss") + ".sqldump"), databaseName);
-            }
-            catch (SqlException ex)
-            {
-                var errMsg = $"SQL connecting: {ex.Message}";
-                LogText(errMsg);
-                return false;
-            }
-            catch (MySqlException ex)
-            {
-                var errMsg = "Error: ";
-                // get the number from the inner exception
-                if (ex.InnerException != null)
+                LogText(result);
+                switch (defaultDatabase)
                 {
-                    var mySqlErrorNumber = Database.GetExceptionNumber(ex);
-                    // create a short error message for the console log / label
-                    errMsg += $"{mySqlErrorNumber} : {ex.InnerException.Message}";
+                    case 0:
+                        ACEManager.Config.AuthLastBackupPath = newFilePath;
+                        break;
+                    case 1:
+                        ACEManager.Config.ShardLastBackupPath = newFilePath;
+                        break;
+                    case 2:
+                        ACEManager.Config.WorldLastBackupPath = newFilePath;
+                        break;
+                    default:
+                        Console.WriteLine("Error in switch statement!");
+                        return false;
                 }
-                else
-                {
-                    errMsg += $"{ex.Message}";
-                }
-                // long message to console
-                LogText(errMsg);
-                return false;
-            }
-            catch (Exception error)
-            {
-                LogText(error.Message);
-                return false;
+                ConfigManager.Save(ACEManager.Config);
             }
             return true;
         }
 
-        private bool RestoreDatabase(string resorePath, string databaseName)
+        private bool RestoreDatabase(string restorePath, string databaseName, bool disableWarnings)
         {
+            if (!disableWarnings)
+            {
+                // Allow user to cancel:
+                if (WarnUser("This will reset `" + databaseName + "`, if the database exists!") == false)
+                {
+                    LogText("Canceled action!");
+                    return false;
+                }
+            }
             // Check the Backup dirctory permission
             if (!CheckBackupPath()) return false;
-            try
+            var result = Database.RestoreDatabase(restorePath, databaseName);
+            if (result.Length > 0)
             {
-                Database.RestoreDatabase(resorePath, databaseName);
-            }
-            catch (SqlException ex)
-            {
-                var errMsg = $"SQL connecting: {ex.Message}";
-                LogText(errMsg);
-                return false;
-            }
-            catch (MySqlException ex)
-            {
-                var errMsg = "Error: ";
-                // get the number from the inner exception
-                if (ex.InnerException != null)
-                {
-                    var mySqlErrorNumber = Database.GetExceptionNumber(ex);
-                    // create a short error message for the console log / label
-                    errMsg += $"{mySqlErrorNumber} : {ex.InnerException.Message}";
-                }
-                else
-                {
-                    errMsg += $"{ex.Message}";
-                }
-                // long message to console
-                LogText(errMsg);
-                return false;
-            }
-            catch (Exception error)
-            {
-                LogText(error.Message);
-                return false;
+                LogText(result);
             }
             return true;
         }
@@ -1187,10 +1120,10 @@ namespace ACEManager
                 DisableButtons();
                 var databaseName = txtBxDBAuthName.Text;
                 LogText($"Backing up {databaseName}.");
-                if (BackupDatabase(databaseName))
+                if (BackupDatabase(databaseName, (int)DefaultACEDatabases.Authentication))
                     LogText("Backup Completed!");
                 else
-                    LogText($"Failure durring data clear for {databaseName}.");
+                    LogText($"Failure durring backup.");
                 EnableButtons();
             }
             else
@@ -1207,10 +1140,10 @@ namespace ACEManager
                 DisableButtons();
                 var databaseName = txtBxDBShardName.Text;
                 LogText($"Backing up {databaseName}.");
-                if (BackupDatabase(databaseName))
+                if (BackupDatabase(databaseName, (int)DefaultACEDatabases.Shard))
                     LogText("Backup Completed!");
                 else
-                    LogText($"Failure durring data clear for {databaseName}.");
+                    LogText($"Failure durring backup.");
                 EnableButtons();
             }
             else
@@ -1227,10 +1160,10 @@ namespace ACEManager
                 DisableButtons();
                 var databaseName = txtBxDBWorldName.Text;
                 LogText($"Backing up {databaseName}.");
-                if (BackupDatabase(databaseName))
+                if (BackupDatabase(databaseName, (int)DefaultACEDatabases.World))
                     LogText("Backup Completed!");
                 else
-                    LogText($"Failure durring data clear for {databaseName}.");
+                    LogText($"Failure durring backup.");
                 EnableButtons();
             }
             else
@@ -1283,10 +1216,10 @@ namespace ACEManager
                 DisableButtons();
                 var databaseName = txtBxDBAuthName.Text;
                 LogText($"Restoring {filePath} into {databaseName}.");
-                if (RestoreDatabase(filePath, databaseName))
+                if (RestoreDatabase(filePath, databaseName, DisableWarnings)) 
                     LogText("Restore Completed!");
                 else
-                    LogText($"Failure durring data clear for {databaseName}.");
+                    LogText($"Failure durring restore.");
                 EnableButtons();
             }
         }
@@ -1300,10 +1233,10 @@ namespace ACEManager
                 DisableButtons();
                 var databaseName = txtBxDBShardName.Text;
                 LogText($"Restoring {filePath} into {databaseName}.");
-                if (RestoreDatabase(filePath, databaseName))
+                if (RestoreDatabase(filePath, databaseName, DisableWarnings))
                     LogText("Restore Completed!");
                 else
-                    LogText($"Failure durring data clear for {databaseName}.");
+                    LogText($"Failure durring restore.");
                 EnableButtons();
             }
         }
@@ -1317,10 +1250,61 @@ namespace ACEManager
                 DisableButtons();
                 var databaseName = txtBxDBWorldName.Text;
                 LogText($"Restoring {filePath} into {databaseName}.");
-                if (RestoreDatabase(filePath, databaseName))
+                if (RestoreDatabase(filePath, databaseName, DisableWarnings))
                     LogText("Restore Completed!");
                 else
-                    LogText($"Failure durring data clear for {databaseName}.");
+                    LogText($"Failure durring restore.");
+                EnableButtons();
+            }
+        }
+
+        private void BtnLoadAuthBackup_Click(object sender, EventArgs e)
+        {
+            var filePath = ACEManager.Config.AuthLastBackupPath;
+            if (filePath.Length > 0 && txtBxDBAuthName.TextLength > 0)
+            {
+                // check backup directory from config?
+                DisableButtons();
+                var databaseName = txtBxDBAuthName.Text;
+                LogText($"Restoring {filePath} into {databaseName}.");
+                if (RestoreDatabase(filePath, databaseName, DisableWarnings))
+                    LogText("Restore Completed!");
+                else
+                    LogText($"Failure durring restore.");
+                EnableButtons();
+            }
+        }
+
+        private void btnLoadLastShardBackup_Click(object sender, EventArgs e)
+        {
+            var filePath = ACEManager.Config.ShardLastBackupPath;
+            if (filePath.Length > 0 && txtBxDBShardName.TextLength > 0)
+            {
+                // check backup directory from config?
+                DisableButtons();
+                var databaseName = txtBxDBShardName.Text;
+                LogText($"Restoring {filePath} into {databaseName}.");
+                if (RestoreDatabase(filePath, databaseName, DisableWarnings))
+                    LogText("Restore Completed!");
+                else
+                    LogText($"Failure durring restore.");
+                EnableButtons();
+            }
+        }
+
+        private void btnLoadLastWorldBackup_Click(object sender, EventArgs e)
+        {
+            var filePath = ACEManager.Config.WorldLastBackupPath;
+            if (filePath.Length > 0 && txtBxDBWorldName.TextLength > 0)
+            {
+                // check backup directory from config?
+                DisableButtons();
+                var databaseName = txtBxDBWorldName.Text;
+                LogText($"Restoring {filePath} into {databaseName}.");
+                if (RestoreDatabase(filePath, databaseName, DisableWarnings))
+                    LogText("Restore Completed!");
+                else
+                    LogText($"Failure durring restore.");
                 EnableButtons();
             }
         }

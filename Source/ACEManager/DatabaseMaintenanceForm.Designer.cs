@@ -453,7 +453,7 @@
             this.btnLoadLastWorldBackup.TabIndex = 21;
             this.btnLoadLastWorldBackup.Text = "Load last World Backup";
             this.btnLoadLastWorldBackup.UseVisualStyleBackColor = true;
-            this.btnLoadLastWorldBackup.Visible = false;
+            this.btnLoadLastWorldBackup.Click += new System.EventHandler(this.btnLoadLastWorldBackup_Click);
             // 
             // btnLoadLastShardBackup
             // 
@@ -463,7 +463,7 @@
             this.btnLoadLastShardBackup.TabIndex = 20;
             this.btnLoadLastShardBackup.Text = "Load Last Shard Backup";
             this.btnLoadLastShardBackup.UseVisualStyleBackColor = true;
-            this.btnLoadLastShardBackup.Visible = false;
+            this.btnLoadLastShardBackup.Click += new System.EventHandler(this.btnLoadLastShardBackup_Click);
             // 
             // btnLoadAuthBackup
             // 
@@ -473,7 +473,7 @@
             this.btnLoadAuthBackup.TabIndex = 19;
             this.btnLoadAuthBackup.Text = "Load Last Auth Backup";
             this.btnLoadAuthBackup.UseVisualStyleBackColor = true;
-            this.btnLoadAuthBackup.Visible = false;
+            this.btnLoadAuthBackup.Click += new System.EventHandler(this.BtnLoadAuthBackup_Click);
             // 
             // grpBackupRestore
             // 

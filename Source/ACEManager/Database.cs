@@ -311,19 +311,48 @@ namespace ACEManager
             List<string> databaseTables = DatabaseTables(databaseName);
             if (databaseTables.Count > 0)
             {
-                foreach (string dbTable in databaseTables)
+                try
                 {
-                    result += $"Truncating data from {databaseName}.{dbTable}..." + Environment.NewLine;
-                    // reset connection string to new database
-                    using (MySqlConnection connection = Database.Connect(databaseName))
-                    using (MySqlCommand query = connection.CreateCommand())
+                    foreach (string dbTable in databaseTables)
                     {
-                        query.CommandText = $"TRUNCATE TABLE {dbTable}";
-                        result += "int: " + query.ExecuteNonQuery().ToString() + Environment.NewLine;
-                        connection.Close();
+                        result += $"Truncating data from {databaseName}.{dbTable}..." + Environment.NewLine;
+                        // reset connection string to new database
+                        using (MySqlConnection connection = Database.Connect(databaseName))
+                        using (MySqlCommand query = connection.CreateCommand())
+                        {
+                            query.CommandText = $"TRUNCATE TABLE `{dbTable}`";
+                            result += "int: " + query.ExecuteNonQuery().ToString() + Environment.NewLine;
+                            connection.Close();
+                        }
                     }
+                    return result;
                 }
-                return result;
+                catch (SqlException ex)
+                {
+                    var errMsg = $"SQL connecting: {ex.Message}";
+                    return errMsg;
+                }
+                catch (MySqlException ex)
+                {
+                    var errMsg = "Error: ";
+                    // get the number from the inner exception
+                    if (ex.InnerException != null)
+                    {
+                        var mySqlErrorNumber = Database.GetExceptionNumber(ex);
+                        // create a short error message for the console log / label
+                        errMsg += $"{mySqlErrorNumber} : {ex.InnerException.Message}";
+                    }
+                    else
+                    {
+                        errMsg += $"{ex.Message}";
+                    }
+                    // long message to console
+                    return errMsg;
+                }
+                catch (Exception error)
+                {
+                    return error.Message;
+                }
             }
             else
                 return "No tables found!";

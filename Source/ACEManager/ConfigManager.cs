@@ -87,6 +87,7 @@ namespace ACEManager
         [DefaultValue("Updates\\World")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string WorldUpdatesPath { get; set; }
+
         /// <summary>
         ///  URL to the current ACE-World Git repository.
         /// </summary>
@@ -150,6 +151,18 @@ namespace ACEManager
         [DefaultValue(false)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public bool YouveBeenWarned { get; set; }
+
+        [DefaultValue("")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public string AuthLastBackupPath { get; set; }
+
+        [DefaultValue("")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public string ShardLastBackupPath { get; set; }
+
+        [DefaultValue("")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public string WorldLastBackupPath { get; set; }
     }
 
     public static class ConfigManager
@@ -290,13 +303,14 @@ namespace ACEManager
             StartingConfiguration = new Config() {
                 AceServerPath = "%SYSTEMROOT%//ACEmulator//",
                 AceServerExecutable = "ACE.exe",
-                AceServerArguments = "",
+                AceServerArguments = string.Empty,
                 AdvancedMode = false,
                 AuthDatabaseName = "ace_auth",
                 AuthenticationBaseSqlFilename = "AuthenticationBase.sql",
                 AuthenticationBaseSqlUrl = "https://raw.githubusercontent.com/ACEmulator/ACE/master/Database/Base/AuthenticationBase.sql",
                 AuthenticationUpdatesPath = "Updates\\Authentication\\",
                 AuthenticationUpdatesSqlUrl = "https://api.github.com/repositories/79078680/contents/Database/Updates/Authentication",
+                AuthLastBackupPath = string.Empty,
                 BackupPath = "Backups\\",
                 DatabaseHost = "127.0.0.1",
                 DatabasePassword = "",
@@ -310,11 +324,13 @@ namespace ACEManager
                 ShardDatabaseName = "ace_shard",
                 ShardUpdatesPath = "Updates\\Shard\\",
                 ShardUpdatesSqlUrl = "https://api.github.com/repositories/79078680/contents/Database/Updates/Shard",
+                ShardLastBackupPath = string.Empty,
                 WorldBaseSqlFilename = "WorldBase.sql",
                 WorldBaseSqlUrl = "https://raw.githubusercontent.com/ACEmulator/ACE/master/Database/Base/WorldBase.sql",
                 WorldDatabaseName = "ace_world",
                 WorldUpdatesPath = "Updates\\World\\",
                 WorldUpdatesSqlUrl = "https://api.github.com/repositories/79078680/contents/Database/Updates/World",
+                WorldLastBackupPath = string.Empty,
                 SaveLogFile = true,
                 LocalLogPath = @"ACEManagerLog_",
                 LogDataFormat = "yyyy-M-dd_HH-mm-ss.ffff",
