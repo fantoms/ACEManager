@@ -24,6 +24,142 @@ namespace ACEManager
             return connection;
         }
 
+        private static string _BackupDatabase(string backupDestination, string databaseName)
+        {
+            string results;
+            using (MySqlConnection connection = Database.Connect(databaseName))
+            {
+                using (MySqlCommand query = connection.CreateCommand())
+                {
+                    using (MySqlBackup mb = new MySqlBackup(query))
+                    {
+                        query.Connection = connection;
+                        mb.ExportToFile(backupDestination);
+                        connection.Close();
+                        results = mb.ExportInfo.IntervalForProgressReport.ToString();
+                    }
+                }
+            }
+            return results;
+        }
+
+        private static string _RestoreDatabase(string backupDestination, string databaseName)
+        {
+            string results;
+            using (MySqlConnection connection = Database.Connect(databaseName))
+            {
+                using (MySqlCommand query = connection.CreateCommand())
+                {
+                    using (MySqlBackup mb = new MySqlBackup(query))
+                    {
+                        query.Connection = connection;
+                        mb.ImportFromFile(backupDestination);
+                        connection.Close();
+                        results = mb.ImportInfo.IntervalForProgressReport.ToString();
+                    }
+                }
+            }
+            return results;
+        }
+
+        public static string BackupDatabase(string backupDestination, string databaseName)
+        {
+            if (backupDestination.Length == 0 || databaseName.Length == 0)
+                return $"Error: invalid input";
+
+            var result = "";
+            try
+            {
+                result = _BackupDatabase(backupDestination, databaseName);
+            }
+            catch (SqlException ex)
+            {
+                var errMsg = $"SQL Error in the downloaded data: {ex.Message}";
+#if DEBUG
+                Console.WriteLine(errMsg);
+#endif
+                return errMsg;
+            }
+            catch (MySqlException ex)
+            {
+                var errMsg = "Error: ";
+                // get the number from the inner exception
+                if (ex.InnerException != null)
+                {
+                    MySqlErrorNumber = GetExceptionNumber(ex);
+                    // create a short error message for the console log / label
+                    errMsg += $"{MySqlErrorNumber} : {ex.InnerException.Message}";
+                }
+                else
+                {
+                    errMsg += $"{ex.Message}";
+                }
+#if DEBUG
+                // long message to console
+                Console.WriteLine(errMsg);
+#endif
+                return errMsg;
+            }
+            catch (Exception e)
+            {
+                var errMsg = $"Error: {e.Message}";
+#if DEBUG
+                Console.WriteLine(errMsg);
+#endif
+                return errMsg;
+            }
+            return $"{result}";
+        }
+
+        public static string RestoreDatabase(string backupSource, string databaseName)
+        {
+            if (backupSource.Length == 0 || databaseName.Length == 0)
+                return $"Error: invalid input";
+
+            var result = "";
+            try
+            {
+                result = _RestoreDatabase(backupSource, databaseName);
+            }
+            catch (SqlException ex)
+            {
+                var errMsg = $"SQL Error in the downloaded data: {ex.Message}";
+#if DEBUG
+                Console.WriteLine(errMsg);
+#endif
+                return errMsg;
+            }
+            catch (MySqlException ex)
+            {
+                var errMsg = "Error: ";
+                // get the number from the inner exception
+                if (ex.InnerException != null)
+                {
+                    MySqlErrorNumber = GetExceptionNumber(ex);
+                    // create a short error message for the console log / label
+                    errMsg += $"{MySqlErrorNumber} : {ex.InnerException.Message}";
+                }
+                else
+                {
+                    errMsg += $"{ex.Message}";
+                }
+#if DEBUG
+                // long message to console
+                Console.WriteLine(errMsg);
+#endif
+                return errMsg;
+            }
+            catch (Exception e)
+            {
+                var errMsg = $"Error: {e.Message}";
+#if DEBUG
+                Console.WriteLine(errMsg);
+#endif
+                return errMsg;
+            }
+            return $"{result}";
+        }
+
         public static string Execute(string script, string databaseName)
         {
             var result = "";
@@ -124,6 +260,7 @@ namespace ACEManager
                 query.CommandText = script;
                 MySqlDataReader reader = query.ExecuteReader();
                 resultString += $"Affected Rows: {reader.RecordsAffected}";
+                connection.Close();
             }
             return resultString;
         }
@@ -144,6 +281,7 @@ namespace ACEManager
                 query.ScriptCompleted += ACEManager.DatabaseMaintenanceForm.Database_StatementCompleted;
                 int count = query.Execute();
                 resultString += $"Affected rows: {count.ToString()}";
+                connection.Close();
             }
             return resultString;
         }
@@ -161,6 +299,7 @@ namespace ACEManager
                     // 0 should be table names
                     results.Add(reader.GetString(0));
                 }
+                connection.Close();
             }
             return results;
         }
@@ -181,6 +320,7 @@ namespace ACEManager
                     {
                         query.CommandText = $"TRUNCATE TABLE {dbTable}";
                         result += "int: " + query.ExecuteNonQuery().ToString() + Environment.NewLine;
+                        connection.Close();
                     }
                 }
                 return result;

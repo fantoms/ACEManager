@@ -127,7 +127,7 @@ namespace ACEManager
         {
             // Create missing folders, if needed.
 
-            if (!CheckRepository())
+            if (!CheckBackupPath())
             {
                 LogText("Error in data repository, click download data again!");
                 return;
@@ -325,7 +325,8 @@ namespace ACEManager
                     LogText("No updates for this database are available.");
                     // not a failure, just no updates
                     return true;
-                } else
+                }
+                else
                 {
                     LogText($"Found {files.Count()}");
                 }
@@ -438,7 +439,8 @@ namespace ACEManager
             try
             {
                 ZipFile.ExtractToDirectory(filePath, destinationPath);
-            } catch (Exception error)
+            }
+            catch (Exception error)
             {
                 LogText(error.Message);
                 return;
@@ -462,7 +464,7 @@ namespace ACEManager
             }
             return false;
         }
-        
+
         private bool HardMode()
         {
             string message = "This software is in an experimental stage. If you use this, note that there is a chance your database will be lost or broken.\nYou've chosen to turn on the advanced settings, so please note that you can break your database with the wrong click!";
@@ -484,11 +486,56 @@ namespace ACEManager
                 return false;
         }
 
-        private bool CheckRepository()
+        private bool CheckBackupPath()
+        {
+            string dataRepository;
+            if (ACEManager.Config.BackupPath?.Length > 0)
+            {
+                dataRepository = Path.GetFullPath(ACEManager.Config.BackupPath);
+            }
+            else
+                dataRepository = "";
+
+            // Testing to see if we can save data in the path saved in the config
+            if (dataRepository?.Length > 0)
+            {
+                // test if directory is exists
+                if (!Directory.Exists(dataRepository))
+                {
+                    LogText($"Creating backup directory: {dataRepository}");
+                    Directory.CreateDirectory(dataRepository);
+                }
+                else
+                {
+                    string absolutePath = Path.GetFullPath(dataRepository);
+                    // exists, can we write?
+                    PermissionSet perms = new PermissionSet(PermissionState.None);
+                    FileIOPermission writePermission = new FileIOPermission(FileIOPermissionAccess.Write, absolutePath);
+                    perms.AddPermission(writePermission);
+                    if (!perms.IsSubsetOf(AppDomain.CurrentDomain.PermissionSet))
+                    {
+                        // You don't have write permissions
+                        LogText("Could not load or create the data directory, cannot write too the directory!");
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                LogText("Config Error: Invalid Path!");
+                return false;
+            }
+            // finally set the path and return success (true)
+            // this means, the path exists and we can write too it
+            ConfigManager.SetBackupPath(dataRepository);
+            return true;
+        }
+
+        private bool CheckDataPath()
         {
             if (ConfigManager.DataPath == null)
             {
-                ConfigManager.SetDataPath();
+                ConfigManager.SetDataPath(ACEManager.Config);
             }
 
             string dataRepository = ConfigManager.DataPath;
@@ -499,7 +546,6 @@ namespace ACEManager
                 if (!Directory.Exists(dataRepository))
                 {
                     Directory.CreateDirectory(dataRepository);
-                    var pathtest = Path.Combine(dataRepository, ACEManager.Config.ShardUpdatesPath);
                     Directory.CreateDirectory(Path.GetFullPath(Path.Combine(dataRepository, ACEManager.Config.AuthenticationUpdatesPath)));
                     Directory.CreateDirectory(Path.GetFullPath(Path.Combine(dataRepository, ACEManager.Config.ShardUpdatesPath)));
                     Directory.CreateDirectory(Path.GetFullPath(Path.Combine(dataRepository, ACEManager.Config.WorldUpdatesPath)));
@@ -511,7 +557,6 @@ namespace ACEManager
                     PermissionSet perms = new PermissionSet(PermissionState.None);
                     FileIOPermission writePermission = new FileIOPermission(FileIOPermissionAccess.Write, absolutePath);
                     perms.AddPermission(writePermission);
-
                     if (!perms.IsSubsetOf(AppDomain.CurrentDomain.PermissionSet))
                     {
                         // You don't have write permissions
@@ -531,7 +576,7 @@ namespace ACEManager
         private bool DownloadUpdates()
         {
             LogText("Downloading all data from github...");
-            if (CheckRepository())
+            if (CheckBackupPath())
             {
                 try
                 {
@@ -613,6 +658,86 @@ namespace ACEManager
 
             if (!disableWarnings)
                 DisableWarnings = false;
+            return true;
+        }
+
+        private bool BackupDatabase(string databaseName)
+        {
+            // Check the Backup dirctory permission
+            if (!CheckBackupPath()) return false;
+            try
+            {
+                Database.BackupDatabase(Path.GetFullPath(ConfigManager.BackupPath + "\\" + databaseName + "." + DateTime.Now.ToString("yyyy-dd-M-HH-mm-ss") + ".sqldump"), databaseName);
+            }
+            catch (SqlException ex)
+            {
+                var errMsg = $"SQL connecting: {ex.Message}";
+                LogText(errMsg);
+                return false;
+            }
+            catch (MySqlException ex)
+            {
+                var errMsg = "Error: ";
+                // get the number from the inner exception
+                if (ex.InnerException != null)
+                {
+                    var mySqlErrorNumber = Database.GetExceptionNumber(ex);
+                    // create a short error message for the console log / label
+                    errMsg += $"{mySqlErrorNumber} : {ex.InnerException.Message}";
+                }
+                else
+                {
+                    errMsg += $"{ex.Message}";
+                }
+                // long message to console
+                LogText(errMsg);
+                return false;
+            }
+            catch (Exception error)
+            {
+                LogText(error.Message);
+                return false;
+            }
+            return true;
+        }
+
+        private bool RestoreDatabase(string resorePath, string databaseName)
+        {
+            // Check the Backup dirctory permission
+            if (!CheckBackupPath()) return false;
+            try
+            {
+                Database.RestoreDatabase(resorePath, databaseName);
+            }
+            catch (SqlException ex)
+            {
+                var errMsg = $"SQL connecting: {ex.Message}";
+                LogText(errMsg);
+                return false;
+            }
+            catch (MySqlException ex)
+            {
+                var errMsg = "Error: ";
+                // get the number from the inner exception
+                if (ex.InnerException != null)
+                {
+                    var mySqlErrorNumber = Database.GetExceptionNumber(ex);
+                    // create a short error message for the console log / label
+                    errMsg += $"{mySqlErrorNumber} : {ex.InnerException.Message}";
+                }
+                else
+                {
+                    errMsg += $"{ex.Message}";
+                }
+                // long message to console
+                LogText(errMsg);
+                return false;
+            }
+            catch (Exception error)
+            {
+                LogText(error.Message);
+                return false;
+            }
             return true;
         }
 
@@ -714,7 +839,7 @@ namespace ACEManager
             btnRestWorldDB.Enabled = false;
             btnShardUpdates.Enabled = false;
             btnWorldUpdates.Enabled = false;
-            button1.Enabled = false;
+            btnBackupAllData.Enabled = false;
             btnCancel.Enabled = false;
             btnSave.Enabled = false;
         }
@@ -750,7 +875,7 @@ namespace ACEManager
             btnRestWorldDB.Enabled = true;
             btnShardUpdates.Enabled = true;
             btnWorldUpdates.Enabled = true;
-            button1.Enabled = true;
+            btnBackupAllData.Enabled = true;
             btnCancel.Enabled = true;
             btnSave.Enabled = true;
         }
@@ -759,7 +884,6 @@ namespace ACEManager
         {
             if (chkBxAdvanced.CheckState == CheckState.Checked)
             {
-                // grpBackupRestore.Visible = true;
                 if (!ACEManager.Config.HardModeReached)
                 {
                     if (!HardMode())
@@ -768,12 +892,13 @@ namespace ACEManager
                         return;
                     }
                 }
+                grpBackupRestore.Visible = true;
                 grpCreatDelete.Visible = true;
                 ACEManager.Config.AdvancedMode = true;
             }
             else
             {
-                // grpBackupRestore.Visible = false;
+                grpBackupRestore.Visible = false;
                 grpCreatDelete.Visible = false;
                 ACEManager.Config.AdvancedMode = false;
             }
@@ -929,7 +1054,8 @@ namespace ACEManager
 
         private void BtnResetAuthDB_Click(object sender, EventArgs e)
         {
-            if (txtBxDBAuthName.TextLength > 0) {
+            if (txtBxDBAuthName.TextLength > 0)
+            {
                 DisableButtons();
                 var databaseName = txtBxDBAuthName.Text;
                 if (ResetAuth(databaseName, DisableWarnings))
@@ -1008,12 +1134,12 @@ namespace ACEManager
                 if (ClearDatabase(databaseName, DisableWarnings))
                     LogText("Completed!");
                 else
-                    LogText($"Failure durring data clear for {databaseName}");
+                    LogText($"Failure durring data clear for {databaseName}.");
                 EnableButtons();
             }
             else
             {
-                LogText("Please enter a database name inside of the database settings.");
+                LogText("Please enter a database name inside of the authenitcation database settings.");
             }
         }
 
@@ -1026,12 +1152,12 @@ namespace ACEManager
                 if (ClearDatabase(databaseName, DisableWarnings))
                     LogText("Completed!");
                 else
-                    LogText($"Failure durring data clear for {databaseName}");
+                    LogText($"Failure durring data clear for {databaseName}.");
                 EnableButtons();
             }
             else
             {
-                LogText("Please enter a database name inside of the database settings.");
+                LogText("Please enter a database name inside of the shard database settings.");
             }
         }
 
@@ -1044,12 +1170,158 @@ namespace ACEManager
                 if (ClearDatabase(databaseName, DisableWarnings))
                     LogText("Completed!");
                 else
-                    LogText($"Failure durring data clear for {databaseName}");
+                    LogText($"Failure durring data clear for {databaseName}.");
                 EnableButtons();
             }
             else
             {
-                LogText("Please enter a database name inside of the database settings.");
+                LogText("Please enter a database name inside of the world database settings.");
+            }
+        }
+
+        private void BtnBackupAuth_Click(object sender, EventArgs e)
+        {
+            if (txtBxDBAuthName.TextLength > 0)
+            {
+                // check backup directory from config?
+                DisableButtons();
+                var databaseName = txtBxDBAuthName.Text;
+                LogText($"Backing up {databaseName}.");
+                if (BackupDatabase(databaseName))
+                    LogText("Backup Completed!");
+                else
+                    LogText($"Failure durring data clear for {databaseName}.");
+                EnableButtons();
+            }
+            else
+            {
+                LogText("Please enter a database name inside of the authentication database settings.");
+            }
+        }
+
+        private void BtnBackupShard_Click(object sender, EventArgs e)
+        {
+            if (txtBxDBShardName.TextLength > 0)
+            {
+                // check backup directory from config?
+                DisableButtons();
+                var databaseName = txtBxDBShardName.Text;
+                LogText($"Backing up {databaseName}.");
+                if (BackupDatabase(databaseName))
+                    LogText("Backup Completed!");
+                else
+                    LogText($"Failure durring data clear for {databaseName}.");
+                EnableButtons();
+            }
+            else
+            {
+                LogText("Please enter a database name inside of the shard database settings.");
+            }
+        }
+
+        private void BtnBackupWorld_Click(object sender, EventArgs e)
+        {
+            if (txtBxDBWorldName.TextLength > 0)
+            {
+                // check backup directory from config?
+                DisableButtons();
+                var databaseName = txtBxDBWorldName.Text;
+                LogText($"Backing up {databaseName}.");
+                if (BackupDatabase(databaseName))
+                    LogText("Backup Completed!");
+                else
+                    LogText($"Failure durring data clear for {databaseName}.");
+                EnableButtons();
+            }
+            else
+            {
+                LogText("Please enter a database name inside of the world database settings.");
+            }
+        }
+
+        private void BtnBackupAllData_Click(object sender, EventArgs e)
+        {
+            LogText($"Backing up all of the databases!");
+
+            DisableButtons();
+            BtnBackupAuth_Click(null, null);
+            BtnBackupShard_Click(null, null);
+            BtnBackupWorld_Click(null, null);
+            EnableButtons();
+            LogText("Done backing up all of the databases!");
+        }
+
+        private string OpenFileDialog()
+        {
+            if (!CheckBackupPath())
+            {
+                var errMsg = "Error in Backup Path, check your config.";
+                LogText(errMsg);
+                return errMsg;
+            }
+
+            OpenFileDialog fileSelect = new OpenFileDialog();
+            fileSelect.InitialDirectory = ConfigManager.BackupPath?.Length > 0 ? ConfigManager.BackupPath : "C:\\";
+            fileSelect.Filter = "sql files (*.sql)|*.sql|sql dumps (*.sqldump|*.sqldump|All files (*.*)|*.*";
+            fileSelect.FilterIndex = 4;
+            fileSelect.RestoreDirectory = true;
+
+            string filePath = "";
+            if (fileSelect.ShowDialog() == DialogResult.OK)
+            {
+                filePath = fileSelect.FileName;
+            }
+            return filePath;
+        }
+
+        private void BtnLoadAnAuthBackup_Click(object sender, EventArgs e)
+        {
+            var filePath = OpenFileDialog();
+            if (filePath.Length > 0 && txtBxDBAuthName.TextLength > 0)
+            {
+                // check backup directory from config?
+                DisableButtons();
+                var databaseName = txtBxDBAuthName.Text;
+                LogText($"Restoring {filePath} into {databaseName}.");
+                if (RestoreDatabase(filePath, databaseName))
+                    LogText("Restore Completed!");
+                else
+                    LogText($"Failure durring data clear for {databaseName}.");
+                EnableButtons();
+            }
+        }
+
+        private void BtnLoadAShardBacup_Click(object sender, EventArgs e)
+        {
+            var filePath = OpenFileDialog();
+            if (filePath.Length > 0 && txtBxDBShardName.TextLength > 0)
+            {
+                // check backup directory from config?
+                DisableButtons();
+                var databaseName = txtBxDBShardName.Text;
+                LogText($"Restoring {filePath} into {databaseName}.");
+                if (RestoreDatabase(filePath, databaseName))
+                    LogText("Restore Completed!");
+                else
+                    LogText($"Failure durring data clear for {databaseName}.");
+                EnableButtons();
+            }
+        }
+
+        private void BtnLoadAWorldBackup_Click(object sender, EventArgs e)
+        {
+            var filePath = OpenFileDialog();
+            if (filePath.Length > 0 && txtBxDBWorldName.TextLength > 0)
+            {
+                // check backup directory from config?
+                DisableButtons();
+                var databaseName = txtBxDBWorldName.Text;
+                LogText($"Restoring {filePath} into {databaseName}.");
+                if (RestoreDatabase(filePath, databaseName))
+                    LogText("Restore Completed!");
+                else
+                    LogText($"Failure durring data clear for {databaseName}.");
+                EnableButtons();
             }
         }
     }

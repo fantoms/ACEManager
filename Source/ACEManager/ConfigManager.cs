@@ -68,7 +68,7 @@ namespace ACEManager
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string WorldDatabaseName { get; set; }
 
-        [DefaultValue("Database")]
+        [DefaultValue("Database\\")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string DataRepository { get; set; }
 
@@ -139,6 +139,10 @@ namespace ACEManager
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string WorldBaseSqlFilename { get; set; }
 
+        [DefaultValue("Backups\\")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public string BackupPath { get; set; }
+
         [DefaultValue(false)]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public bool HardModeReached { get; set; }
@@ -152,16 +156,27 @@ namespace ACEManager
     {
         public static bool ConfigurationLoaded { get; set; } = false;
         public static bool DataPathAvailable { get; set; } = false;
-        public static string DataPath { get; set; }
+        public static string DataPath { get; private set; }
+        public static string BackupPath { get; private set; }
         public static Config StartingConfiguration { get; set; }
 
         public static string ConfigFile { get; private set; }
 
-        public static bool SetDataPath()
+        public static bool SetDataPath(Config configuration)
         {
-            if (StartingConfiguration.DataRepository.Length > 0)
+            if (configuration.DataRepository.Length > 0)
             {
-                DataPath = Path.GetFullPath(StartingConfiguration.DataRepository);
+                DataPath = Path.GetFullPath(configuration.DataRepository);
+                return true;
+            }
+            return false;
+        }
+
+        public static bool SetBackupPath(string newPath)
+        {
+            if (newPath.Length > 0)
+            {
+                BackupPath = Path.GetFullPath(newPath);
                 return true;
             }
             return false;
@@ -280,24 +295,25 @@ namespace ACEManager
                 AuthDatabaseName = "ace_auth",
                 AuthenticationBaseSqlFilename = "AuthenticationBase.sql",
                 AuthenticationBaseSqlUrl = "https://raw.githubusercontent.com/ACEmulator/ACE/master/Database/Base/AuthenticationBase.sql",
-                AuthenticationUpdatesPath = "Updates\\Authentication",
+                AuthenticationUpdatesPath = "Updates\\Authentication\\",
                 AuthenticationUpdatesSqlUrl = "https://api.github.com/repositories/79078680/contents/Database/Updates/Authentication",
+                BackupPath = "Backups\\",
                 DatabaseHost = "127.0.0.1",
                 DatabasePassword = "",
                 DatabasePort = 3306,
                 DatabaseUsername = "root",
-                DataRepository = ".\\Database",
+                DataRepository = "Database\\",
                 EnableAutoRestart = false,
                 GithubURL = "https://api.github.com/repos/ACEmulator/ACE-World/releases/latest",
                 ShardBaseSqlFilename = "ShardBase.sql",
                 ShardBaseSqlUrl = "https://raw.githubusercontent.com/ACEmulator/ACE/master/Database/Base/ShardBase.sql",
                 ShardDatabaseName = "ace_shard",
-                ShardUpdatesPath = "Updates\\Shard",
+                ShardUpdatesPath = "Updates\\Shard\\",
                 ShardUpdatesSqlUrl = "https://api.github.com/repositories/79078680/contents/Database/Updates/Shard",
                 WorldBaseSqlFilename = "WorldBase.sql",
                 WorldBaseSqlUrl = "https://raw.githubusercontent.com/ACEmulator/ACE/master/Database/Base/WorldBase.sql",
                 WorldDatabaseName = "ace_world",
-                WorldUpdatesPath = "Updates\\World",
+                WorldUpdatesPath = "Updates\\World\\",
                 WorldUpdatesSqlUrl = "https://api.github.com/repositories/79078680/contents/Database/Updates/World",
                 SaveLogFile = true,
                 LocalLogPath = @"ACEManagerLog_",

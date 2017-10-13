@@ -73,7 +73,7 @@
             this.btnBackupWorld = new System.Windows.Forms.Button();
             this.grpCreatDelete = new System.Windows.Forms.GroupBox();
             this.grpDownload = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnBackupAllData = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.txtBxDBLog = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -423,6 +423,7 @@
             this.btnLoadAWorldBackup.TabIndex = 18;
             this.btnLoadAWorldBackup.Text = "Load a World Backup...";
             this.btnLoadAWorldBackup.UseVisualStyleBackColor = true;
+            this.btnLoadAWorldBackup.Click += new System.EventHandler(this.BtnLoadAWorldBackup_Click);
             // 
             // btnLoadAShardBacup
             // 
@@ -432,6 +433,7 @@
             this.btnLoadAShardBacup.TabIndex = 17;
             this.btnLoadAShardBacup.Text = "Load a Shard Backup...";
             this.btnLoadAShardBacup.UseVisualStyleBackColor = true;
+            this.btnLoadAShardBacup.Click += new System.EventHandler(this.BtnLoadAShardBacup_Click);
             // 
             // btnLoadAnAuthBackup
             // 
@@ -441,6 +443,7 @@
             this.btnLoadAnAuthBackup.TabIndex = 16;
             this.btnLoadAnAuthBackup.Text = "Load an Auth Backup...";
             this.btnLoadAnAuthBackup.UseVisualStyleBackColor = true;
+            this.btnLoadAnAuthBackup.Click += new System.EventHandler(this.BtnLoadAnAuthBackup_Click);
             // 
             // btnLoadLastWorldBackup
             // 
@@ -450,6 +453,7 @@
             this.btnLoadLastWorldBackup.TabIndex = 21;
             this.btnLoadLastWorldBackup.Text = "Load last World Backup";
             this.btnLoadLastWorldBackup.UseVisualStyleBackColor = true;
+            this.btnLoadLastWorldBackup.Visible = false;
             // 
             // btnLoadLastShardBackup
             // 
@@ -459,6 +463,7 @@
             this.btnLoadLastShardBackup.TabIndex = 20;
             this.btnLoadLastShardBackup.Text = "Load Last Shard Backup";
             this.btnLoadLastShardBackup.UseVisualStyleBackColor = true;
+            this.btnLoadLastShardBackup.Visible = false;
             // 
             // btnLoadAuthBackup
             // 
@@ -468,6 +473,7 @@
             this.btnLoadAuthBackup.TabIndex = 19;
             this.btnLoadAuthBackup.Text = "Load Last Auth Backup";
             this.btnLoadAuthBackup.UseVisualStyleBackColor = true;
+            this.btnLoadAuthBackup.Visible = false;
             // 
             // grpBackupRestore
             // 
@@ -496,6 +502,7 @@
             this.btnBackupAuth.TabIndex = 22;
             this.btnBackupAuth.Text = "Backup Auth Database";
             this.btnBackupAuth.UseVisualStyleBackColor = true;
+            this.btnBackupAuth.Click += new System.EventHandler(this.BtnBackupAuth_Click);
             // 
             // btnBackupShard
             // 
@@ -505,6 +512,7 @@
             this.btnBackupShard.TabIndex = 23;
             this.btnBackupShard.Text = "Backup Shard Database";
             this.btnBackupShard.UseVisualStyleBackColor = true;
+            this.btnBackupShard.Click += new System.EventHandler(this.BtnBackupShard_Click);
             // 
             // btnBackupWorld
             // 
@@ -514,6 +522,7 @@
             this.btnBackupWorld.TabIndex = 24;
             this.btnBackupWorld.Text = "Backup World Database";
             this.btnBackupWorld.UseVisualStyleBackColor = true;
+            this.btnBackupWorld.Click += new System.EventHandler(this.BtnBackupWorld_Click);
             // 
             // grpCreatDelete
             // 
@@ -542,7 +551,7 @@
             // 
             // grpDownload
             // 
-            this.grpDownload.Controls.Add(this.button1);
+            this.grpDownload.Controls.Add(this.btnBackupAllData);
             this.grpDownload.Controls.Add(this.btnDownloadAllData);
             this.grpDownload.Location = new System.Drawing.Point(12, 12);
             this.grpDownload.Name = "grpDownload";
@@ -551,15 +560,15 @@
             this.grpDownload.TabStop = false;
             this.grpDownload.Text = "Download (Required loading schema and World data, aka do first!)";
             // 
-            // button1
+            // btnBackupAllData
             // 
-            this.button1.Location = new System.Drawing.Point(229, 19);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(205, 24);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Backup All Databases!";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Visible = false;
+            this.btnBackupAllData.Location = new System.Drawing.Point(229, 19);
+            this.btnBackupAllData.Name = "btnBackupAllData";
+            this.btnBackupAllData.Size = new System.Drawing.Size(205, 24);
+            this.btnBackupAllData.TabIndex = 5;
+            this.btnBackupAllData.Text = "Backup All Databases!";
+            this.btnBackupAllData.UseVisualStyleBackColor = true;
+            this.btnBackupAllData.Click += new System.EventHandler(this.BtnBackupAllData_Click);
             // 
             // pictureBox1
             // 
@@ -671,6 +680,6 @@
         private System.Windows.Forms.GroupBox grpDownload;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TextBox txtBxDBLog;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnBackupAllData;
     }
 }

@@ -69,7 +69,7 @@ namespace ACEManager
                     var logFile = File.OpenWrite(logLocation + logFileName);
                     foreach (Tuple<DateTime, string> kvp in this.logStringsByTime)
                     {                        
-                        byte[] line = Encoding.ASCII.GetBytes($"{kvp.Item1.ToString(logDataFormat)} : {kvp.Item2} {Environment.NewLine}");
+                        byte[] line = Encoding.ASCII.GetBytes($"{kvp.Item1.ToString(logDataFormat)} : {StripNewlines(kvp.Item2)} {Environment.NewLine}");
                         logFile.Write(line, 0, line.Length);
                     }
                     logFile.Close();
@@ -79,6 +79,21 @@ namespace ACEManager
                     Console.WriteLine("Error saving log file: " + e.ToString());
                 }
             }
+        }
+
+        public static string StripNewlines(string inputString)
+        {
+            int length = inputString.Length;
+            char[] result = new char[length];
+            int count = 0;
+
+            for (int i = 0; i < length; i++)
+            {
+                char c = inputString[i];
+                if (c != '\r' && c != '\n')
+                    result[count++] = c;
+            }
+            return new String(result, 0, count);
         }
     }
 }
