@@ -1275,7 +1275,7 @@ namespace ACEManager
             }
         }
 
-        private void btnLoadLastShardBackup_Click(object sender, EventArgs e)
+        private void BtnLoadLastShardBackup_Click(object sender, EventArgs e)
         {
             var filePath = ACEManager.Config.ShardLastBackupPath;
             if (filePath.Length > 0 && txtBxDBShardName.TextLength > 0)
@@ -1292,7 +1292,7 @@ namespace ACEManager
             }
         }
 
-        private void btnLoadLastWorldBackup_Click(object sender, EventArgs e)
+        private void BtnLoadLastWorldBackup_Click(object sender, EventArgs e)
         {
             var filePath = ACEManager.Config.WorldLastBackupPath;
             if (filePath.Length > 0 && txtBxDBWorldName.TextLength > 0)

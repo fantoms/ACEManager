@@ -17,7 +17,7 @@ namespace ACEManager
         public static MySqlConnection Connect(string databaseName)
         {
             if (string.IsNullOrEmpty(DBConnectionString) || CurrentDatabase != databaseName)
-                DBConnectionString = @"SERVER=" + ACEManager.Config.DatabaseHost + ";PORT=" + ACEManager.Config.DatabasePort + ";UID=" + ACEManager.Config.DatabaseUsername + ";PASSWORD=" + ACEManager.Config.DatabasePassword + ";" + (!string.IsNullOrEmpty(databaseName) ? "DATABASE=" + databaseName : "") + ";Allow User Variables=True;";
+                DBConnectionString = @"SERVER=" + ACEManager.Config.DatabaseHost + ";PORT=" + ACEManager.Config.DatabasePort + ";UID=" + ACEManager.Config.DatabaseUsername + ";PASSWORD=" + ACEManager.Config.DatabasePassword + ";" + (!string.IsNullOrEmpty(databaseName) ? "DATABASE=" + databaseName : "") + ";Allow User Variables=True;charset=utf8;convertzerodatetime=true;";
             
             MySqlConnection connection = new MySqlConnection(DBConnectionString);
             connection.Open();
