@@ -102,7 +102,6 @@
     <Compile Include="ConfigurationForm.Designer.cs">
       <DependentUpon>ConfigurationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="DatabaseQueryState.cs" />
     <Compile Include="DefaultACEDBNames.cs" />
     <Compile Include="ServerControlForm.cs">
       <SubType>Form</SubType>

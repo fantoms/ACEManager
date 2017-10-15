@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO;
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Security;
 using System.Security.Permissions;
 
 namespace ACEManager
-{ 
+{
     public struct Config
     {
         [DefaultValue("..\\..\\..\\..\\Source\\ACEmulator\\Source\\ACE\\bin\\x64\\Debug\\")]

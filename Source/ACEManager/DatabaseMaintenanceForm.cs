@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Newtonsoft.Json;
 using System.Net;
-using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using System.IO.Compression;
-using System.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using System.Security;
 using System.Security.Permissions;
@@ -49,11 +41,6 @@ namespace ACEManager
         private string GithubDate { get; set; }
 
         /// <summary>
-        /// Query State of the last/current database statement execution.
-        /// </summary>
-        public static DatabaseQueryState QueryState { get; private set; }
-
-        /// <summary>
         /// Error information from the database.
         /// </summary>
         public static string ErrorResult { get; private set; }
@@ -69,20 +56,17 @@ namespace ACEManager
 
         public void Database_MySqlError(object sender, MySqlScriptErrorEventArgs e)
         {
-            QueryState = DatabaseQueryState.Error;
             ErrorResult = e.Exception.Message;
             LogText("Error in script:" + ErrorResult);
         }
 
         public void Database_StatementExecuted(object sender, MySqlScriptEventArgs e)
         {
-            QueryState = DatabaseQueryState.Started;
             LogText("Loading...");
         }
 
         public void Database_StatementCompleted(object sender, EventArgs e)
         {
-            QueryState = DatabaseQueryState.Finished;
             LogText("Scripts completed!");
         }
 

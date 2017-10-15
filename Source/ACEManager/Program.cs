@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ACEManager
@@ -58,6 +55,7 @@ namespace ACEManager
                 Log.AddLogLine(exception.ToString());
             }
 
+            // Bomb out (exit) if the config had issues loading.
             if (!ConfigManager.ConfigurationLoaded)
                 Environment.Exit(1);
 
