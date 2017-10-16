@@ -75,6 +75,10 @@ namespace ACEManager
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public bool AdvancedMode { get; set; }
 
+        [DefaultValue(false)]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public bool SaveOldWorldArchives { get; set; }
+
         [DefaultValue("Base\\")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string BaseSqlPath { get; set; }
@@ -328,6 +332,7 @@ namespace ACEManager
                 EnableAutoRestart = false,
                 GithubURL = "https://api.github.com/repos/ACEmulator/ACE-World/releases/latest",
                 UpdatesSqlPath = "Updates\\",
+                SaveOldWorldArchives = false,
                 ShardBaseSqlFilename = "ShardBase.sql",
                 ShardBaseSqlUrl = "https://raw.githubusercontent.com/ACEmulator/ACE/master/Database/Base/ShardBase.sql",
                 ShardDatabaseName = "ace_shard",

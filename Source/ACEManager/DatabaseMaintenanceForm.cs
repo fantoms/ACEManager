@@ -428,6 +428,16 @@ namespace ACEManager
                 LogText(error.Message);
                 return;
             }
+            finally
+            {
+                // delete the zip to save space
+                if (!ACEManager.Config.SaveOldWorldArchives)
+                {
+                    LogText($"Deleting archive {filePath}");
+                    File.Delete(filePath);
+                }
+
+            }
         }
 
         public void LogText(string message)
