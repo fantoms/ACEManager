@@ -101,9 +101,9 @@ namespace ACEManager
 
         private void GetBaseSql()
         {
-            GetWebContent(ACEManager.Config.AuthenticationBaseSqlUrl, Path.GetFullPath(Path.Combine(ConfigManager.DataPath, ACEManager.Config.AuthenticationBaseSqlFilename)));
-            GetWebContent(ACEManager.Config.ShardBaseSqlUrl, Path.GetFullPath(Path.Combine(ConfigManager.DataPath, ACEManager.Config.ShardBaseSqlFilename)));
-            GetWebContent(ACEManager.Config.WorldBaseSqlUrl, Path.GetFullPath(Path.Combine(ConfigManager.DataPath, ACEManager.Config.WorldBaseSqlFilename)));
+            GetWebContent(ACEManager.Config.AuthenticationBaseSqlUrl, Path.GetFullPath(Path.Combine(ConfigManager.DataPath, ACEManager.Config.BaseSqlPath, ACEManager.Config.AuthenticationBaseSqlFilename)));
+            GetWebContent(ACEManager.Config.ShardBaseSqlUrl, Path.GetFullPath(Path.Combine(ConfigManager.DataPath, ACEManager.Config.BaseSqlPath, ACEManager.Config.ShardBaseSqlFilename)));
+            GetWebContent(ACEManager.Config.WorldBaseSqlUrl, Path.GetFullPath(Path.Combine(ConfigManager.DataPath, ACEManager.Config.BaseSqlPath, ACEManager.Config.WorldBaseSqlFilename)));
         }
 
         private void GetAllUpdates()
@@ -119,17 +119,17 @@ namespace ACEManager
             var authfiles = JArray.Parse(GetWebString(ACEManager.Config.AuthenticationUpdatesSqlUrl));
             foreach (var item in authfiles)
             {
-                GetWebContent(item["download_url"].ToString(), Path.Combine(ConfigManager.DataPath, ACEManager.Config.AuthenticationUpdatesPath, item["name"].ToString()));
+                GetWebContent(item["download_url"].ToString(), Path.Combine(ConfigManager.DataPath, ACEManager.Config.UpdatesSqlPath, ACEManager.Config.AuthenticationUpdatesPath, item["name"].ToString()));
             }
             var shardfiles = JArray.Parse(GetWebString(ACEManager.Config.ShardUpdatesSqlUrl));
             foreach (var item in shardfiles)
             {
-                GetWebContent(item["download_url"].ToString(), Path.Combine(ConfigManager.DataPath, ACEManager.Config.ShardUpdatesPath, item["name"].ToString()));
+                GetWebContent(item["download_url"].ToString(), Path.Combine(ConfigManager.DataPath, ACEManager.Config.UpdatesSqlPath, ACEManager.Config.ShardUpdatesPath, item["name"].ToString()));
             }
             var worldfiles = JArray.Parse(GetWebString(ACEManager.Config.WorldUpdatesSqlUrl));
             foreach (var item in worldfiles)
             {
-                GetWebContent(item["download_url"].ToString(), Path.Combine(ConfigManager.DataPath, ACEManager.Config.WorldUpdatesPath, item["name"].ToString()));
+                GetWebContent(item["download_url"].ToString(), Path.Combine(ConfigManager.DataPath, ACEManager.Config.UpdatesSqlPath, ACEManager.Config.WorldUpdatesPath, item["name"].ToString()));
             }
         }
 
@@ -262,7 +262,7 @@ namespace ACEManager
                 LogText("Canceled action!");
                 return false;
             }
-            var sqlFile = Path.Combine(ConfigManager.DataPath + "\\" + baseFilename);
+            var sqlFile = Path.Combine(ConfigManager.DataPath, ACEManager.Config.BaseSqlPath, baseFilename);
             // find the base file:
             if (!File.Exists(sqlFile))
             {
@@ -300,7 +300,7 @@ namespace ACEManager
             // Database.Reset();
             try
             {
-                var updateRepo = Path.Combine(ConfigManager.DataPath, updatePath);
+                var updateRepo = Path.Combine(ConfigManager.DataPath, ACEManager.Config.UpdatesSqlPath, updatePath);
                 var files = from file in Directory.EnumerateFiles(updateRepo) where !file.Contains(".txt") select new { File = file };
 
                 if (files.Count() == 0)
@@ -471,26 +471,26 @@ namespace ACEManager
 
         private bool CheckBackupPath()
         {
-            string dataRepository;
+            string backupRepository;
             if (ACEManager.Config.BackupPath?.Length > 0)
             {
-                dataRepository = Path.GetFullPath(ACEManager.Config.BackupPath);
+                backupRepository = Path.GetFullPath(ACEManager.Config.BackupPath);
             }
             else
-                dataRepository = "";
+                backupRepository = "";
 
             // Testing to see if we can save data in the path saved in the config
-            if (dataRepository?.Length > 0)
+            if (backupRepository?.Length > 0)
             {
                 // test if directory is exists
-                if (!Directory.Exists(dataRepository))
+                if (!Directory.Exists(backupRepository))
                 {
-                    LogText($"Creating backup directory: {dataRepository}");
-                    Directory.CreateDirectory(dataRepository);
+                    LogText($"Creating backup directory: {backupRepository}");
+                    Directory.CreateDirectory(backupRepository);
                 }
                 else
                 {
-                    string absolutePath = Path.GetFullPath(dataRepository);
+                    string absolutePath = Path.GetFullPath(backupRepository);
                     // exists, can we write?
                     PermissionSet perms = new PermissionSet(PermissionState.None);
                     FileIOPermission writePermission = new FileIOPermission(FileIOPermissionAccess.Write, absolutePath);
@@ -510,7 +510,7 @@ namespace ACEManager
             }
             // finally set the path and return success (true)
             // this means, the path exists and we can write too it
-            ConfigManager.SetBackupPath(dataRepository);
+            ConfigManager.SetBackupPath(backupRepository);
             return true;
         }
 
@@ -525,27 +525,17 @@ namespace ACEManager
             // Testing to see if we can save data in the path saved in the config
             if (dataRepository?.Length > 0)
             {
-                // test if directory is exists
-                if (!Directory.Exists(dataRepository))
+                CreateDataFolders(dataRepository);
+                string absolutePath = Path.GetFullPath(dataRepository);
+                // exists, can we write?
+                PermissionSet perms = new PermissionSet(PermissionState.None);
+                FileIOPermission writePermission = new FileIOPermission(FileIOPermissionAccess.Write, absolutePath);
+                perms.AddPermission(writePermission);
+                if (!perms.IsSubsetOf(AppDomain.CurrentDomain.PermissionSet))
                 {
-                    Directory.CreateDirectory(dataRepository);
-                    Directory.CreateDirectory(Path.GetFullPath(Path.Combine(dataRepository, ACEManager.Config.AuthenticationUpdatesPath)));
-                    Directory.CreateDirectory(Path.GetFullPath(Path.Combine(dataRepository, ACEManager.Config.ShardUpdatesPath)));
-                    Directory.CreateDirectory(Path.GetFullPath(Path.Combine(dataRepository, ACEManager.Config.WorldUpdatesPath)));
-                }
-                else
-                {
-                    string absolutePath = Path.GetFullPath(dataRepository);
-                    // exists, can we write?
-                    PermissionSet perms = new PermissionSet(PermissionState.None);
-                    FileIOPermission writePermission = new FileIOPermission(FileIOPermissionAccess.Write, absolutePath);
-                    perms.AddPermission(writePermission);
-                    if (!perms.IsSubsetOf(AppDomain.CurrentDomain.PermissionSet))
-                    {
-                        // You don't have write permissions
-                        LogText("Could not load or create the data directory, cannot write too the directory!");
-                        return false;
-                    }
+                    // You don't have write permissions
+                    LogText("Could not load or create the data directory, cannot write too the directory!");
+                    return false;
                 }
             }
             else
@@ -554,6 +544,16 @@ namespace ACEManager
                 return false;
             }
             return true;
+        }
+
+        private void CreateDataFolders(string dataRepository)
+        {
+            if (!Directory.Exists(dataRepository)) Directory.CreateDirectory(dataRepository);
+            if (!Directory.Exists(Path.Combine(dataRepository, ACEManager.Config.BaseSqlPath))) Directory.CreateDirectory(Path.Combine(dataRepository, ACEManager.Config.BaseSqlPath));
+            if (!Directory.Exists(Path.Combine(dataRepository, ACEManager.Config.UpdatesSqlPath))) Directory.CreateDirectory(Path.Combine(dataRepository, ACEManager.Config.UpdatesSqlPath));
+            if (!Directory.Exists(Path.Combine(dataRepository, ACEManager.Config.UpdatesSqlPath, ACEManager.Config.AuthenticationUpdatesPath))) Directory.CreateDirectory(Path.GetFullPath(Path.Combine(dataRepository, ACEManager.Config.UpdatesSqlPath, ACEManager.Config.AuthenticationUpdatesPath)));
+            if (!Directory.Exists(Path.Combine(dataRepository, ACEManager.Config.UpdatesSqlPath, ACEManager.Config.ShardUpdatesPath))) Directory.CreateDirectory(Path.GetFullPath(Path.Combine(dataRepository, ACEManager.Config.UpdatesSqlPath, ACEManager.Config.ShardUpdatesPath)));
+            if (!Directory.Exists(Path.Combine(dataRepository, ACEManager.Config.UpdatesSqlPath, ACEManager.Config.WorldUpdatesPath))) Directory.CreateDirectory(Path.GetFullPath(Path.Combine(dataRepository, ACEManager.Config.UpdatesSqlPath, ACEManager.Config.WorldUpdatesPath)));
         }
 
         private bool DownloadUpdates()

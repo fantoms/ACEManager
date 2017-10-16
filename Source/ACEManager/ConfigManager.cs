@@ -75,15 +75,23 @@ namespace ACEManager
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public bool AdvancedMode { get; set; }
 
-        [DefaultValue("Updates\\Authentication")]
+        [DefaultValue("Base\\")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public string BaseSqlPath { get; set; }
+
+        [DefaultValue("Updates\\")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public string UpdatesSqlPath { get; set; }
+
+        [DefaultValue("Authentication\\")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string AuthenticationUpdatesPath { get; set; }
 
-        [DefaultValue("Updates\\Shard")]
+        [DefaultValue("Shard\\")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string ShardUpdatesPath { get; set; }
 
-        [DefaultValue("Updates\\World")]
+        [DefaultValue("World\\")]
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string WorldUpdatesPath { get; set; }
 
@@ -311,6 +319,7 @@ namespace ACEManager
                 AuthenticationUpdatesSqlUrl = "https://api.github.com/repositories/79078680/contents/Database/Updates/Authentication",
                 AuthLastBackupPath = string.Empty,
                 BackupPath = "Backups\\",
+                BaseSqlPath = "Base\\",
                 DatabaseHost = "127.0.0.1",
                 DatabasePassword = "",
                 DatabasePort = 3306,
@@ -318,6 +327,7 @@ namespace ACEManager
                 DataRepository = "Database\\",
                 EnableAutoRestart = false,
                 GithubURL = "https://api.github.com/repos/ACEmulator/ACE-World/releases/latest",
+                UpdatesSqlPath = "Updates\\",
                 ShardBaseSqlFilename = "ShardBase.sql",
                 ShardBaseSqlUrl = "https://raw.githubusercontent.com/ACEmulator/ACE/master/Database/Base/ShardBase.sql",
                 ShardDatabaseName = "ace_shard",
