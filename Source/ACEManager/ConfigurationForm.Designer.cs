@@ -50,24 +50,12 @@
             this.txtBxAceServerExe = new System.Windows.Forms.TextBox();
             this.txtBxAceServerPath = new System.Windows.Forms.TextBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.lblWorldUpdatesUrl = new System.Windows.Forms.Label();
-            this.lblWorldBaseUrl = new System.Windows.Forms.Label();
-            this.lblShardUpdatesUrl = new System.Windows.Forms.Label();
-            this.lblShardBaseUrl = new System.Windows.Forms.Label();
-            this.lblAuthUpdatesUrl = new System.Windows.Forms.Label();
-            this.lblAuthBaseUrl = new System.Windows.Forms.Label();
             this.lbACEWorldGithubUrl = new System.Windows.Forms.Label();
             this.lblLocalDataPath = new System.Windows.Forms.Label();
             this.lblDBPassword = new System.Windows.Forms.Label();
             this.lblDBUser = new System.Windows.Forms.Label();
             this.lblDBPort = new System.Windows.Forms.Label();
             this.lblDBHost = new System.Windows.Forms.Label();
-            this.txtBxWorldUpdatesUrl = new System.Windows.Forms.TextBox();
-            this.txtBxWorldBaseUrl = new System.Windows.Forms.TextBox();
-            this.txtBxShardUpdatesUrl = new System.Windows.Forms.TextBox();
-            this.txtBxShardBaseUrl = new System.Windows.Forms.TextBox();
-            this.txtBxAuthUpdatesUrl = new System.Windows.Forms.TextBox();
-            this.txtBxAuthBaseUrl = new System.Windows.Forms.TextBox();
             this.txtBxACEWorldGithubUrl = new System.Windows.Forms.TextBox();
             this.txtBxLocalDataPath = new System.Windows.Forms.TextBox();
             this.txtBxDBHost = new System.Windows.Forms.TextBox();
@@ -75,6 +63,8 @@
             this.txtBxDBUsername = new System.Windows.Forms.TextBox();
             this.txtBxDBPassword = new System.Windows.Forms.TextBox();
             this.groupBoxDatabase = new System.Windows.Forms.GroupBox();
+            this.txtBxBackupPath = new System.Windows.Forms.TextBox();
+            this.lblBackupPath = new System.Windows.Forms.Label();
             this.groupBoxConfig.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -296,12 +286,7 @@
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.lblWorldUpdatesUrl);
-            this.splitContainer2.Panel1.Controls.Add(this.lblWorldBaseUrl);
-            this.splitContainer2.Panel1.Controls.Add(this.lblShardUpdatesUrl);
-            this.splitContainer2.Panel1.Controls.Add(this.lblShardBaseUrl);
-            this.splitContainer2.Panel1.Controls.Add(this.lblAuthUpdatesUrl);
-            this.splitContainer2.Panel1.Controls.Add(this.lblAuthBaseUrl);
+            this.splitContainer2.Panel1.Controls.Add(this.lblBackupPath);
             this.splitContainer2.Panel1.Controls.Add(this.lbACEWorldGithubUrl);
             this.splitContainer2.Panel1.Controls.Add(this.lblLocalDataPath);
             this.splitContainer2.Panel1.Controls.Add(this.lblDBPassword);
@@ -311,12 +296,7 @@
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.txtBxWorldUpdatesUrl);
-            this.splitContainer2.Panel2.Controls.Add(this.txtBxWorldBaseUrl);
-            this.splitContainer2.Panel2.Controls.Add(this.txtBxShardUpdatesUrl);
-            this.splitContainer2.Panel2.Controls.Add(this.txtBxShardBaseUrl);
-            this.splitContainer2.Panel2.Controls.Add(this.txtBxAuthUpdatesUrl);
-            this.splitContainer2.Panel2.Controls.Add(this.txtBxAuthBaseUrl);
+            this.splitContainer2.Panel2.Controls.Add(this.txtBxBackupPath);
             this.splitContainer2.Panel2.Controls.Add(this.txtBxACEWorldGithubUrl);
             this.splitContainer2.Panel2.Controls.Add(this.txtBxLocalDataPath);
             this.splitContainer2.Panel2.Controls.Add(this.txtBxDBHost);
@@ -327,60 +307,6 @@
             this.splitContainer2.SplitterDistance = 124;
             this.splitContainer2.SplitterWidth = 1;
             this.splitContainer2.TabIndex = 1;
-            // 
-            // lblWorldUpdatesUrl
-            // 
-            this.lblWorldUpdatesUrl.AutoSize = true;
-            this.lblWorldUpdatesUrl.Location = new System.Drawing.Point(3, 238);
-            this.lblWorldUpdatesUrl.Name = "lblWorldUpdatesUrl";
-            this.lblWorldUpdatesUrl.Size = new System.Drawing.Size(94, 13);
-            this.lblWorldUpdatesUrl.TabIndex = 13;
-            this.lblWorldUpdatesUrl.Text = "World Updates Url";
-            // 
-            // lblWorldBaseUrl
-            // 
-            this.lblWorldBaseUrl.AutoSize = true;
-            this.lblWorldBaseUrl.Location = new System.Drawing.Point(3, 217);
-            this.lblWorldBaseUrl.Name = "lblWorldBaseUrl";
-            this.lblWorldBaseUrl.Size = new System.Drawing.Size(78, 13);
-            this.lblWorldBaseUrl.TabIndex = 12;
-            this.lblWorldBaseUrl.Text = "World Base Url";
-            // 
-            // lblShardUpdatesUrl
-            // 
-            this.lblShardUpdatesUrl.AutoSize = true;
-            this.lblShardUpdatesUrl.Location = new System.Drawing.Point(3, 196);
-            this.lblShardUpdatesUrl.Name = "lblShardUpdatesUrl";
-            this.lblShardUpdatesUrl.Size = new System.Drawing.Size(94, 13);
-            this.lblShardUpdatesUrl.TabIndex = 11;
-            this.lblShardUpdatesUrl.Text = "Shard Updates Url";
-            // 
-            // lblShardBaseUrl
-            // 
-            this.lblShardBaseUrl.AutoSize = true;
-            this.lblShardBaseUrl.Location = new System.Drawing.Point(3, 175);
-            this.lblShardBaseUrl.Name = "lblShardBaseUrl";
-            this.lblShardBaseUrl.Size = new System.Drawing.Size(78, 13);
-            this.lblShardBaseUrl.TabIndex = 10;
-            this.lblShardBaseUrl.Text = "Shard Base Url";
-            // 
-            // lblAuthUpdatesUrl
-            // 
-            this.lblAuthUpdatesUrl.AutoSize = true;
-            this.lblAuthUpdatesUrl.Location = new System.Drawing.Point(3, 155);
-            this.lblAuthUpdatesUrl.Name = "lblAuthUpdatesUrl";
-            this.lblAuthUpdatesUrl.Size = new System.Drawing.Size(88, 13);
-            this.lblAuthUpdatesUrl.TabIndex = 9;
-            this.lblAuthUpdatesUrl.Text = "Auth Updates Url";
-            // 
-            // lblAuthBaseUrl
-            // 
-            this.lblAuthBaseUrl.AutoSize = true;
-            this.lblAuthBaseUrl.Location = new System.Drawing.Point(3, 133);
-            this.lblAuthBaseUrl.Name = "lblAuthBaseUrl";
-            this.lblAuthBaseUrl.Size = new System.Drawing.Size(72, 13);
-            this.lblAuthBaseUrl.TabIndex = 8;
-            this.lblAuthBaseUrl.Text = "Auth Base Url";
             // 
             // lbACEWorldGithubUrl
             // 
@@ -394,11 +320,11 @@
             // lblLocalDataPath
             // 
             this.lblLocalDataPath.AutoSize = true;
-            this.lblLocalDataPath.Location = new System.Drawing.Point(3, 91);
+            this.lblLocalDataPath.Location = new System.Drawing.Point(3, 133);
             this.lblLocalDataPath.Name = "lblLocalDataPath";
-            this.lblLocalDataPath.Size = new System.Drawing.Size(125, 13);
+            this.lblLocalDataPath.Size = new System.Drawing.Size(87, 13);
             this.lblLocalDataPath.TabIndex = 6;
-            this.lblLocalDataPath.Text = "Local Data Path / Temp:";
+            this.lblLocalDataPath.Text = "Local Data Path:";
             // 
             // lblDBPassword
             // 
@@ -436,48 +362,6 @@
             this.lblDBHost.TabIndex = 1;
             this.lblDBHost.Text = "Host:";
             // 
-            // txtBxWorldUpdatesUrl
-            // 
-            this.txtBxWorldUpdatesUrl.Location = new System.Drawing.Point(9, 235);
-            this.txtBxWorldUpdatesUrl.Name = "txtBxWorldUpdatesUrl";
-            this.txtBxWorldUpdatesUrl.Size = new System.Drawing.Size(218, 20);
-            this.txtBxWorldUpdatesUrl.TabIndex = 21;
-            // 
-            // txtBxWorldBaseUrl
-            // 
-            this.txtBxWorldBaseUrl.Location = new System.Drawing.Point(9, 214);
-            this.txtBxWorldBaseUrl.Name = "txtBxWorldBaseUrl";
-            this.txtBxWorldBaseUrl.Size = new System.Drawing.Size(218, 20);
-            this.txtBxWorldBaseUrl.TabIndex = 20;
-            // 
-            // txtBxShardUpdatesUrl
-            // 
-            this.txtBxShardUpdatesUrl.Location = new System.Drawing.Point(9, 193);
-            this.txtBxShardUpdatesUrl.Name = "txtBxShardUpdatesUrl";
-            this.txtBxShardUpdatesUrl.Size = new System.Drawing.Size(218, 20);
-            this.txtBxShardUpdatesUrl.TabIndex = 19;
-            // 
-            // txtBxShardBaseUrl
-            // 
-            this.txtBxShardBaseUrl.Location = new System.Drawing.Point(9, 172);
-            this.txtBxShardBaseUrl.Name = "txtBxShardBaseUrl";
-            this.txtBxShardBaseUrl.Size = new System.Drawing.Size(218, 20);
-            this.txtBxShardBaseUrl.TabIndex = 18;
-            // 
-            // txtBxAuthUpdatesUrl
-            // 
-            this.txtBxAuthUpdatesUrl.Location = new System.Drawing.Point(9, 151);
-            this.txtBxAuthUpdatesUrl.Name = "txtBxAuthUpdatesUrl";
-            this.txtBxAuthUpdatesUrl.Size = new System.Drawing.Size(218, 20);
-            this.txtBxAuthUpdatesUrl.TabIndex = 17;
-            // 
-            // txtBxAuthBaseUrl
-            // 
-            this.txtBxAuthBaseUrl.Location = new System.Drawing.Point(9, 130);
-            this.txtBxAuthBaseUrl.Name = "txtBxAuthBaseUrl";
-            this.txtBxAuthBaseUrl.Size = new System.Drawing.Size(218, 20);
-            this.txtBxAuthBaseUrl.TabIndex = 16;
-            // 
             // txtBxACEWorldGithubUrl
             // 
             this.txtBxACEWorldGithubUrl.Location = new System.Drawing.Point(9, 109);
@@ -487,7 +371,7 @@
             // 
             // txtBxLocalDataPath
             // 
-            this.txtBxLocalDataPath.Location = new System.Drawing.Point(9, 88);
+            this.txtBxLocalDataPath.Location = new System.Drawing.Point(9, 130);
             this.txtBxLocalDataPath.Name = "txtBxLocalDataPath";
             this.txtBxLocalDataPath.Size = new System.Drawing.Size(218, 20);
             this.txtBxLocalDataPath.TabIndex = 14;
@@ -530,6 +414,22 @@
             this.groupBoxDatabase.TabIndex = 2;
             this.groupBoxDatabase.TabStop = false;
             this.groupBoxDatabase.Text = "Database Maintenance Settings (Optional)";
+            // 
+            // txtBxBackupPath
+            // 
+            this.txtBxBackupPath.Location = new System.Drawing.Point(9, 151);
+            this.txtBxBackupPath.Name = "txtBxBackupPath";
+            this.txtBxBackupPath.Size = new System.Drawing.Size(218, 20);
+            this.txtBxBackupPath.TabIndex = 16;
+            // 
+            // lblBackupPath
+            // 
+            this.lblBackupPath.AutoSize = true;
+            this.lblBackupPath.Location = new System.Drawing.Point(3, 154);
+            this.lblBackupPath.Name = "lblBackupPath";
+            this.lblBackupPath.Size = new System.Drawing.Size(101, 13);
+            this.lblBackupPath.TabIndex = 8;
+            this.lblBackupPath.Text = "Local Backup Path:";
             // 
             // ConfigurationForm
             // 
@@ -602,17 +502,7 @@
         private System.Windows.Forms.TextBox txtBxLocalDataPath;
         private System.Windows.Forms.Label lbACEWorldGithubUrl;
         private System.Windows.Forms.TextBox txtBxACEWorldGithubUrl;
-        private System.Windows.Forms.TextBox txtBxShardUpdatesUrl;
-        private System.Windows.Forms.TextBox txtBxShardBaseUrl;
-        private System.Windows.Forms.TextBox txtBxAuthUpdatesUrl;
-        private System.Windows.Forms.TextBox txtBxAuthBaseUrl;
-        private System.Windows.Forms.TextBox txtBxWorldUpdatesUrl;
-        private System.Windows.Forms.TextBox txtBxWorldBaseUrl;
-        private System.Windows.Forms.Label lblWorldUpdatesUrl;
-        private System.Windows.Forms.Label lblWorldBaseUrl;
-        private System.Windows.Forms.Label lblShardUpdatesUrl;
-        private System.Windows.Forms.Label lblShardBaseUrl;
-        private System.Windows.Forms.Label lblAuthUpdatesUrl;
-        private System.Windows.Forms.Label lblAuthBaseUrl;
+        private System.Windows.Forms.Label lblBackupPath;
+        private System.Windows.Forms.TextBox txtBxBackupPath;
     }
 }

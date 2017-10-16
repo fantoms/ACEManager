@@ -961,9 +961,11 @@ namespace ACEManager
             {
                 DisableButtons();
                 if (LoadWorld())
+                {
                     LogText("Load World Finished.");
-                if (LoadUpdates(txtBxDBWorldName.Text, ACEManager.Config.WorldUpdatesPath))
-                    LogText("Updates Finished.");
+                    if (LoadUpdates(txtBxDBWorldName.Text, ACEManager.Config.WorldUpdatesPath))
+                        LogText("Updates Finished.");
+                }
                 // Load World!?!?!
                 EnableButtons();
             }

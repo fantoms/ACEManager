@@ -33,12 +33,7 @@ namespace ACEManager
             txtBxDBPassword.Text = ACEManager.Config.DatabasePassword;
             txtBxLocalDataPath.Text = ACEManager.Config.DataRepository;
             txtBxACEWorldGithubUrl.Text = ACEManager.Config.GithubURL;
-            txtBxAuthBaseUrl.Text = ACEManager.Config.AuthenticationBaseSqlUrl;
-            txtBxAuthUpdatesUrl.Text = ACEManager.Config.AuthenticationUpdatesSqlUrl;
-            txtBxShardBaseUrl.Text = ACEManager.Config.ShardBaseSqlUrl;
-            txtBxShardUpdatesUrl.Text = ACEManager.Config.ShardUpdatesSqlUrl;
-            txtBxWorldBaseUrl.Text = ACEManager.Config.WorldBaseSqlUrl;
-            txtBxWorldUpdatesUrl.Text = ACEManager.Config.WorldUpdatesSqlUrl;
+            txtBxBackupPath.Text = ACEManager.Config.BackupPath;
         }
 
         private void SaveSettings()
@@ -57,12 +52,7 @@ namespace ACEManager
             ACEManager.Config.DatabasePassword = txtBxDBPassword.Text;
             ACEManager.Config.DataRepository = txtBxLocalDataPath.Text;
             ACEManager.Config.GithubURL = txtBxACEWorldGithubUrl.Text;
-            ACEManager.Config.AuthenticationBaseSqlUrl = txtBxAuthBaseUrl.Text;
-            ACEManager.Config.AuthenticationUpdatesSqlUrl = txtBxAuthUpdatesUrl.Text;
-            ACEManager.Config.ShardBaseSqlUrl = txtBxShardBaseUrl.Text;
-            ACEManager.Config.ShardUpdatesSqlUrl = txtBxShardUpdatesUrl.Text;
-            ACEManager.Config.WorldBaseSqlUrl = txtBxWorldBaseUrl.Text;
-            ACEManager.Config.WorldUpdatesSqlUrl = txtBxWorldUpdatesUrl.Text;
+            ACEManager.Config.BackupPath = txtBxBackupPath.Text;
             ACEManager.ConfigurationUpdateRequired = true;
             ConfigManager.Save(ACEManager.Config);
         }
