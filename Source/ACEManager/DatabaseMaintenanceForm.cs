@@ -442,8 +442,8 @@ namespace ACEManager
 
         public void LogText(string message)
         {
-            var logData = message + Environment.NewLine;
-            ACEManager.Log.AddLogLine(logData);
+            var logData = Environment.NewLine + message;
+            ACEManager.Log.AddLogLine(message);
             txtBxDBLog.AppendText(logData);
         }
 
@@ -526,9 +526,9 @@ namespace ACEManager
 
         private bool CheckDataPath()
         {
-            if (ConfigManager.DataPath == null)
+            if (ConfigManager.DataPath == null && ACEManager.Config.DataRepository?.Length > 0)
             {
-                ConfigManager.SetDataPath(ACEManager.Config);
+                ConfigManager.SetDataPath(ACEManager.Config.DataRepository);
             }
 
             string dataRepository = ConfigManager.DataPath;
@@ -767,6 +767,8 @@ namespace ACEManager
             btnShardUpdates.Enabled = false;
             btnWorldUpdates.Enabled = false;
             btnBackupAllData.Enabled = false;
+            btnResetFromALocation.Enabled = false;
+            btnResetFromDev.Enabled = false;
             btnCancel.Enabled = false;
             btnSave.Enabled = false;
         }
@@ -803,6 +805,8 @@ namespace ACEManager
             btnShardUpdates.Enabled = true;
             btnWorldUpdates.Enabled = true;
             btnBackupAllData.Enabled = true;
+            btnResetFromALocation.Enabled = true;
+            btnResetFromDev.Enabled = true;
             btnCancel.Enabled = true;
             btnSave.Enabled = true;
         }
@@ -819,6 +823,11 @@ namespace ACEManager
                         return;
                     }
                 }
+                this.Height = 646;
+                txtBxDBLog.Height = 582;
+                aceLogo.Location = new System.Drawing.Point(12,473);
+                grpDBSettings.Location = new System.Drawing.Point(154, 473);
+                grpSetupIndividualDatabases.Visible = true;
                 grpBackupRestore.Visible = true;
                 grpCreatDelete.Visible = true;
                 btnResetFromDev.Visible = true;
@@ -827,6 +836,11 @@ namespace ACEManager
             }
             else
             {
+                this.Height = 300;
+                txtBxDBLog.Height = 238;
+                aceLogo.Location = new System.Drawing.Point(12, 129);
+                grpDBSettings.Location = new System.Drawing.Point(154, 129);
+                grpSetupIndividualDatabases.Visible = false;
                 grpBackupRestore.Visible = false;
                 grpCreatDelete.Visible = false;
                 btnResetFromDev.Visible = false;
@@ -1207,6 +1221,26 @@ namespace ACEManager
             return filePath;
         }
 
+        private bool OpenFolderDialog()
+        {
+            if (!CheckDataPath())
+            {
+                var errMsg = "Error in Backup Path, check your config.";
+                LogText(errMsg);
+                return false;
+            }
+            FolderBrowserDialog folderSelect = new FolderBrowserDialog();
+            folderSelect.SelectedPath = ConfigManager.DataPath?.Length > 0 ? ConfigManager.DataPath : "C:\\";
+            string folderPath = "";
+            if (folderSelect.ShowDialog() == DialogResult.OK)
+            {
+                ConfigManager.SetDataPath(folderSelect.SelectedPath);
+                return true;
+            }
+            else
+                return false;
+        }
+
         private void BtnLoadAnAuthBackup_Click(object sender, EventArgs e)
         {
             var filePath = OpenFileDialog();
@@ -1309,20 +1343,52 @@ namespace ACEManager
             }
         }
 
-        private void btnResetFromDev_Click(object sender, EventArgs e)
+        private void BtnResetFromDev_Click(object sender, EventArgs e)
         {
             if (ACEManager.Config.AceServerPath?.Length > 0) {
                 var testPath = Path.GetFullPath(Path.Combine(ACEManager.Config.AceServerPath, "..\\..\\..\\..\\..\\Database\\"));
                 // test the path from server argument ..//..//Database
-                if (Directory.Exists(testPath)) {
-                    var captureDatapath = ConfigManager.DataPath;
-                    ACEManager.Config.DataRepository = testPath;
-                    ConfigManager.SetDataPath(ACEManager.Config);
-                    BtnResetAllData_Click(null, null);
-                    ACEManager.Config.DataRepository = captureDatapath;
-                    ConfigManager.SetDataPath(ACEManager.Config);
+                if (Directory.Exists(testPath))
+                {
+                    var captureDataPath = ConfigManager.DataPath;
+                    ConfigManager.SetDataPath(testPath);
+                    try
+                    {
+                        BtnResetAllData_Click(null, null);
+                    }
+                    catch (Exception error)
+                    {
+                        LogText("Unknown Issue: " + error.Message);
+                    }
+                    ConfigManager.SetDataPath(captureDataPath);
                 }
+                else
+                    LogText($"Troubles loading path {testPath}");
             }
+            else
+            {
+                LogText("Invalid Server path in config.");
+            }
+        }
+
+        private void BtnResetFromALocation_Click(object sender, EventArgs e)
+        {
+            var captureDataPath = ConfigManager.DataPath;
+            if (OpenFolderDialog())
+                try
+                {
+                    BtnResetAllData_Click(null, null);
+                }
+                catch (Exception error)
+                {
+                    LogText("Unknown Issue: " + error.Message);
+                }
+                finally
+                {
+                    ConfigManager.SetDataPath(captureDataPath);
+                }
+            else
+                LogText("Canceled reset.");    
         }
     }
 }

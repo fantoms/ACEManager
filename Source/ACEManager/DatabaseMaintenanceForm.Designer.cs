@@ -39,12 +39,14 @@
             this.txtBxDBAuthName = new System.Windows.Forms.TextBox();
             this.txtBxDBShardName = new System.Windows.Forms.TextBox();
             this.txtBxDBWorldName = new System.Windows.Forms.TextBox();
-            this.groupBoxDatabase = new System.Windows.Forms.GroupBox();
+            this.grpDBSettings = new System.Windows.Forms.GroupBox();
             this.grpSimpleMode = new System.Windows.Forms.GroupBox();
+            this.btnResetAllData = new System.Windows.Forms.Button();
+            this.btnResetFromALocation = new System.Windows.Forms.Button();
+            this.btnResetFromDev = new System.Windows.Forms.Button();
             this.btnResetShardDB = new System.Windows.Forms.Button();
             this.btnRestWorldDB = new System.Windows.Forms.Button();
             this.btnResetAuthDB = new System.Windows.Forms.Button();
-            this.btnResetAllData = new System.Windows.Forms.Button();
             this.btnClearWorldData = new System.Windows.Forms.Button();
             this.btnClearShardData = new System.Windows.Forms.Button();
             this.btnClearAuthData = new System.Windows.Forms.Button();
@@ -74,20 +76,20 @@
             this.grpCreatDelete = new System.Windows.Forms.GroupBox();
             this.grpDownload = new System.Windows.Forms.GroupBox();
             this.btnBackupAllData = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.aceLogo = new System.Windows.Forms.PictureBox();
             this.txtBxDBLog = new System.Windows.Forms.TextBox();
-            this.btnResetFromALocation = new System.Windows.Forms.Button();
-            this.btnResetFromDev = new System.Windows.Forms.Button();
+            this.grpSetupIndividualDatabases = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            this.groupBoxDatabase.SuspendLayout();
+            this.grpDBSettings.SuspendLayout();
             this.grpSimpleMode.SuspendLayout();
             this.grpBackupRestore.SuspendLayout();
             this.grpCreatDelete.SuspendLayout();
             this.grpDownload.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.aceLogo)).BeginInit();
+            this.grpSetupIndividualDatabases.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCancel
@@ -194,30 +196,59 @@
             this.txtBxDBWorldName.Size = new System.Drawing.Size(150, 20);
             this.txtBxDBWorldName.TabIndex = 10;
             // 
-            // groupBoxDatabase
+            // grpDBSettings
             // 
-            this.groupBoxDatabase.Controls.Add(this.splitContainer2);
-            this.groupBoxDatabase.Location = new System.Drawing.Point(605, 12);
-            this.groupBoxDatabase.Name = "groupBoxDatabase";
-            this.groupBoxDatabase.Size = new System.Drawing.Size(298, 121);
-            this.groupBoxDatabase.TabIndex = 2;
-            this.groupBoxDatabase.TabStop = false;
-            this.groupBoxDatabase.Text = "Database Maintenance Settings";
+            this.grpDBSettings.Controls.Add(this.splitContainer2);
+            this.grpDBSettings.Location = new System.Drawing.Point(154, 129);
+            this.grpDBSettings.Name = "grpDBSettings";
+            this.grpDBSettings.Size = new System.Drawing.Size(298, 121);
+            this.grpDBSettings.TabIndex = 2;
+            this.grpDBSettings.TabStop = false;
+            this.grpDBSettings.Text = "Database Maintenance Settings";
             // 
             // grpSimpleMode
             // 
-            this.grpSimpleMode.Controls.Add(this.btnResetFromDev);
-            this.grpSimpleMode.Controls.Add(this.btnResetFromALocation);
-            this.grpSimpleMode.Controls.Add(this.btnResetShardDB);
-            this.grpSimpleMode.Controls.Add(this.btnRestWorldDB);
-            this.grpSimpleMode.Controls.Add(this.btnResetAuthDB);
             this.grpSimpleMode.Controls.Add(this.btnResetAllData);
+            this.grpSimpleMode.Controls.Add(this.btnResetFromALocation);
+            this.grpSimpleMode.Controls.Add(this.btnResetFromDev);
             this.grpSimpleMode.Location = new System.Drawing.Point(12, 70);
             this.grpSimpleMode.Name = "grpSimpleMode";
-            this.grpSimpleMode.Size = new System.Drawing.Size(440, 89);
+            this.grpSimpleMode.Size = new System.Drawing.Size(440, 53);
             this.grpSimpleMode.TabIndex = 3;
             this.grpSimpleMode.TabStop = false;
-            this.grpSimpleMode.Text = "Step 2: Database Setup (WARNING, BE CAREFUL WITH THIS TOOL!)";
+            this.grpSimpleMode.Text = "Setup All Databases (WARNING, BE CAREFUL WITH THIS TOOL!)";
+            // 
+            // btnResetAllData
+            // 
+            this.btnResetAllData.Location = new System.Drawing.Point(6, 19);
+            this.btnResetAllData.Name = "btnResetAllData";
+            this.btnResetAllData.Size = new System.Drawing.Size(140, 26);
+            this.btnResetAllData.TabIndex = 5;
+            this.btnResetAllData.Text = "Load from Downloads";
+            this.btnResetAllData.UseVisualStyleBackColor = true;
+            this.btnResetAllData.Click += new System.EventHandler(this.BtnResetAllData_Click);
+            // 
+            // btnResetFromALocation
+            // 
+            this.btnResetFromALocation.Location = new System.Drawing.Point(294, 19);
+            this.btnResetFromALocation.Name = "btnResetFromALocation";
+            this.btnResetFromALocation.Size = new System.Drawing.Size(140, 26);
+            this.btnResetFromALocation.TabIndex = 19;
+            this.btnResetFromALocation.Text = "Load from another folder";
+            this.btnResetFromALocation.UseVisualStyleBackColor = true;
+            this.btnResetFromALocation.Visible = false;
+            this.btnResetFromALocation.Click += new System.EventHandler(this.BtnResetFromALocation_Click);
+            // 
+            // btnResetFromDev
+            // 
+            this.btnResetFromDev.Location = new System.Drawing.Point(152, 19);
+            this.btnResetFromDev.Name = "btnResetFromDev";
+            this.btnResetFromDev.Size = new System.Drawing.Size(136, 26);
+            this.btnResetFromDev.TabIndex = 20;
+            this.btnResetFromDev.Text = "Load from ACE folder";
+            this.btnResetFromDev.UseVisualStyleBackColor = true;
+            this.btnResetFromDev.Visible = false;
+            this.btnResetFromDev.Click += new System.EventHandler(this.BtnResetFromDev_Click);
             // 
             // btnResetShardDB
             // 
@@ -248,16 +279,6 @@
             this.btnResetAuthDB.Text = "Reset Authentication Database";
             this.btnResetAuthDB.UseVisualStyleBackColor = true;
             this.btnResetAuthDB.Click += new System.EventHandler(this.BtnResetAuthDB_Click);
-            // 
-            // btnResetAllData
-            // 
-            this.btnResetAllData.Location = new System.Drawing.Point(6, 55);
-            this.btnResetAllData.Name = "btnResetAllData";
-            this.btnResetAllData.Size = new System.Drawing.Size(138, 26);
-            this.btnResetAllData.TabIndex = 5;
-            this.btnResetAllData.Text = "Reset ALL from Database Folder";
-            this.btnResetAllData.UseVisualStyleBackColor = true;
-            this.btnResetAllData.Click += new System.EventHandler(this.BtnResetAllData_Click);
             // 
             // btnClearWorldData
             // 
@@ -490,9 +511,9 @@
             this.grpBackupRestore.Controls.Add(this.btnLoadAuthBackup);
             this.grpBackupRestore.Controls.Add(this.btnLoadAShardBacup);
             this.grpBackupRestore.Controls.Add(this.btnLoadAWorldBackup);
-            this.grpBackupRestore.Location = new System.Drawing.Point(458, 224);
+            this.grpBackupRestore.Location = new System.Drawing.Point(12, 188);
             this.grpBackupRestore.Name = "grpBackupRestore";
-            this.grpBackupRestore.Size = new System.Drawing.Size(445, 107);
+            this.grpBackupRestore.Size = new System.Drawing.Size(440, 107);
             this.grpBackupRestore.TabIndex = 4;
             this.grpBackupRestore.TabStop = false;
             this.grpBackupRestore.Text = "Advanced: Backup / Restore";
@@ -545,9 +566,9 @@
             this.grpCreatDelete.Controls.Add(this.btnDropShardDB);
             this.grpCreatDelete.Controls.Add(this.btnAuthUpdates);
             this.grpCreatDelete.Controls.Add(this.btnShardUpdates);
-            this.grpCreatDelete.Location = new System.Drawing.Point(12, 165);
+            this.grpCreatDelete.Location = new System.Drawing.Point(12, 301);
             this.grpCreatDelete.Name = "grpCreatDelete";
-            this.grpCreatDelete.Size = new System.Drawing.Size(439, 166);
+            this.grpCreatDelete.Size = new System.Drawing.Size(440, 166);
             this.grpCreatDelete.TabIndex = 5;
             this.grpCreatDelete.TabStop = false;
             this.grpCreatDelete.Text = "Developers Only: Create / Delete";
@@ -562,7 +583,7 @@
             this.grpDownload.Size = new System.Drawing.Size(440, 52);
             this.grpDownload.TabIndex = 8;
             this.grpDownload.TabStop = false;
-            this.grpDownload.Text = "Step 1: Initialize Data and Backup Existing";
+            this.grpDownload.Text = "Initialize Data and Backup Existing";
             // 
             // btnBackupAllData
             // 
@@ -574,48 +595,43 @@
             this.btnBackupAllData.UseVisualStyleBackColor = true;
             this.btnBackupAllData.Click += new System.EventHandler(this.BtnBackupAllData_Click);
             // 
-            // pictureBox1
+            // aceLogo
             // 
-            this.pictureBox1.Image = global::ACEManager.Properties.Resources.ACEMULATOR_LOGO;
-            this.pictureBox1.Location = new System.Drawing.Point(458, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(141, 121);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 9;
-            this.pictureBox1.TabStop = false;
+            this.aceLogo.Image = global::ACEManager.Properties.Resources.ACEMULATOR_LOGO;
+            this.aceLogo.Location = new System.Drawing.Point(13, 129);
+            this.aceLogo.Name = "aceLogo";
+            this.aceLogo.Size = new System.Drawing.Size(141, 121);
+            this.aceLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.aceLogo.TabIndex = 9;
+            this.aceLogo.TabStop = false;
             // 
             // txtBxDBLog
             // 
+            this.txtBxDBLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtBxDBLog.CausesValidation = false;
-            this.txtBxDBLog.Location = new System.Drawing.Point(458, 139);
+            this.txtBxDBLog.Location = new System.Drawing.Point(458, 12);
             this.txtBxDBLog.Multiline = true;
             this.txtBxDBLog.Name = "txtBxDBLog";
             this.txtBxDBLog.ReadOnly = true;
             this.txtBxDBLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtBxDBLog.Size = new System.Drawing.Size(447, 79);
+            this.txtBxDBLog.Size = new System.Drawing.Size(314, 238);
             this.txtBxDBLog.TabIndex = 10;
             this.txtBxDBLog.TabStop = false;
             // 
-            // btnResetFromALocation
+            // grpSetupIndividualDatabases
             // 
-            this.btnResetFromALocation.Location = new System.Drawing.Point(292, 55);
-            this.btnResetFromALocation.Name = "btnResetFromALocation";
-            this.btnResetFromALocation.Size = new System.Drawing.Size(138, 26);
-            this.btnResetFromALocation.TabIndex = 19;
-            this.btnResetFromALocation.Text = "Reset All from a location";
-            this.btnResetFromALocation.UseVisualStyleBackColor = true;
-            this.btnResetFromALocation.Visible = false;
-            // 
-            // btnResetFromDev
-            // 
-            this.btnResetFromDev.Location = new System.Drawing.Point(150, 55);
-            this.btnResetFromDev.Name = "btnResetFromDev";
-            this.btnResetFromDev.Size = new System.Drawing.Size(136, 26);
-            this.btnResetFromDev.TabIndex = 20;
-            this.btnResetFromDev.Text = "Reset All from ACE folder";
-            this.btnResetFromDev.UseVisualStyleBackColor = true;
-            this.btnResetFromDev.Visible = false;
-            this.btnResetFromDev.Click += new System.EventHandler(this.btnResetFromDev_Click);
+            this.grpSetupIndividualDatabases.Controls.Add(this.btnResetAuthDB);
+            this.grpSetupIndividualDatabases.Controls.Add(this.btnRestWorldDB);
+            this.grpSetupIndividualDatabases.Controls.Add(this.btnResetShardDB);
+            this.grpSetupIndividualDatabases.Location = new System.Drawing.Point(13, 129);
+            this.grpSetupIndividualDatabases.Name = "grpSetupIndividualDatabases";
+            this.grpSetupIndividualDatabases.Size = new System.Drawing.Size(440, 52);
+            this.grpSetupIndividualDatabases.TabIndex = 19;
+            this.grpSetupIndividualDatabases.TabStop = false;
+            this.grpSetupIndividualDatabases.Text = "Setup Individual Databases";
+            this.grpSetupIndividualDatabases.Visible = false;
             // 
             // DatabaseMaintenanceForm
             // 
@@ -623,14 +639,15 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(915, 336);
+            this.ClientSize = new System.Drawing.Size(784, 258);
+            this.Controls.Add(this.grpSetupIndividualDatabases);
             this.Controls.Add(this.txtBxDBLog);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.aceLogo);
             this.Controls.Add(this.grpDownload);
+            this.Controls.Add(this.grpDBSettings);
             this.Controls.Add(this.grpCreatDelete);
             this.Controls.Add(this.grpBackupRestore);
             this.Controls.Add(this.grpSimpleMode);
-            this.Controls.Add(this.groupBoxDatabase);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -645,12 +662,13 @@
             this.splitContainer2.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            this.groupBoxDatabase.ResumeLayout(false);
+            this.grpDBSettings.ResumeLayout(false);
             this.grpSimpleMode.ResumeLayout(false);
             this.grpBackupRestore.ResumeLayout(false);
             this.grpCreatDelete.ResumeLayout(false);
             this.grpDownload.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.aceLogo)).EndInit();
+            this.grpSetupIndividualDatabases.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -662,7 +680,7 @@
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.Label lblDBShardName;
         private System.Windows.Forms.Label lblDBAuthName;
-        private System.Windows.Forms.GroupBox groupBoxDatabase;
+        private System.Windows.Forms.GroupBox grpDBSettings;
         private System.Windows.Forms.Label lblDBWorldName;
         private System.Windows.Forms.TextBox txtBxDBAuthName;
         private System.Windows.Forms.TextBox txtBxDBShardName;
@@ -701,10 +719,11 @@
         private System.Windows.Forms.Button btnRestWorldDB;
         private System.Windows.Forms.CheckBox chkBxAdvanced;
         private System.Windows.Forms.GroupBox grpDownload;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox aceLogo;
         private System.Windows.Forms.TextBox txtBxDBLog;
         private System.Windows.Forms.Button btnBackupAllData;
         private System.Windows.Forms.Button btnResetFromDev;
         private System.Windows.Forms.Button btnResetFromALocation;
+        private System.Windows.Forms.GroupBox grpSetupIndividualDatabases;
     }
 }

@@ -186,11 +186,11 @@ namespace ACEManager
 
         public static string ConfigFile { get; private set; }
 
-        public static bool SetDataPath(Config configuration)
+        public static bool SetDataPath(string newPath)
         {
-            if (configuration.DataRepository.Length > 0)
+            if (newPath.Length > 0)
             {
-                DataPath = Path.GetFullPath(configuration.DataRepository);
+                DataPath = Path.GetFullPath(newPath);
                 return true;
             }
             return false;
