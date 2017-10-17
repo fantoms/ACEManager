@@ -821,12 +821,16 @@ namespace ACEManager
                 }
                 grpBackupRestore.Visible = true;
                 grpCreatDelete.Visible = true;
+                btnResetFromDev.Visible = true;
+                btnResetFromALocation.Visible = true;
                 ACEManager.Config.AdvancedMode = true;
             }
             else
             {
                 grpBackupRestore.Visible = false;
                 grpCreatDelete.Visible = false;
+                btnResetFromDev.Visible = false;
+                btnResetFromALocation.Visible = false;
                 ACEManager.Config.AdvancedMode = false;
             }
         }
@@ -1302,6 +1306,22 @@ namespace ACEManager
                 else
                     LogText($"Failure durring restore.");
                 EnableButtons();
+            }
+        }
+
+        private void btnResetFromDev_Click(object sender, EventArgs e)
+        {
+            if (ACEManager.Config.AceServerPath?.Length > 0) {
+                var testPath = Path.GetFullPath(Path.Combine(ACEManager.Config.AceServerPath, "..\\..\\..\\..\\..\\Database\\"));
+                // test the path from server argument ..//..//Database
+                if (Directory.Exists(testPath)) {
+                    var captureDatapath = ConfigManager.DataPath;
+                    ACEManager.Config.DataRepository = testPath;
+                    ConfigManager.SetDataPath(ACEManager.Config);
+                    BtnResetAllData_Click(null, null);
+                    ACEManager.Config.DataRepository = captureDatapath;
+                    ConfigManager.SetDataPath(ACEManager.Config);
+                }
             }
         }
     }

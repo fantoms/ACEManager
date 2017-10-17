@@ -76,6 +76,8 @@
             this.btnBackupAllData = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.txtBxDBLog = new System.Windows.Forms.TextBox();
+            this.btnResetFromALocation = new System.Windows.Forms.Button();
+            this.btnResetFromDev = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -91,7 +93,7 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(100, 71);
+            this.btnCancel.Location = new System.Drawing.Point(100, 72);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(59, 23);
             this.btnCancel.TabIndex = 9;
@@ -128,7 +130,7 @@
             this.splitContainer2.Panel2.Controls.Add(this.btnSave);
             this.splitContainer2.Panel2.Controls.Add(this.txtBxDBShardName);
             this.splitContainer2.Panel2.Controls.Add(this.txtBxDBWorldName);
-            this.splitContainer2.Size = new System.Drawing.Size(291, 104);
+            this.splitContainer2.Size = new System.Drawing.Size(291, 98);
             this.splitContainer2.SplitterDistance = 123;
             this.splitContainer2.SplitterWidth = 1;
             this.splitContainer2.TabIndex = 1;
@@ -163,11 +165,11 @@
             // chkBxAdvanced
             // 
             this.chkBxAdvanced.AutoSize = true;
-            this.chkBxAdvanced.Location = new System.Drawing.Point(6, 68);
+            this.chkBxAdvanced.Location = new System.Drawing.Point(5, 69);
             this.chkBxAdvanced.Name = "chkBxAdvanced";
-            this.chkBxAdvanced.Size = new System.Drawing.Size(99, 30);
+            this.chkBxAdvanced.Size = new System.Drawing.Size(113, 30);
             this.chkBxAdvanced.TabIndex = 7;
-            this.chkBxAdvanced.Text = "Advanced /\r\nThwargle mode";
+            this.chkBxAdvanced.Text = "Developer Mode /\r\nThwargle mode";
             this.chkBxAdvanced.UseVisualStyleBackColor = true;
             this.chkBxAdvanced.CheckedChanged += new System.EventHandler(this.ChkBxAdvanced_CheckedChanged);
             // 
@@ -195,43 +197,45 @@
             // groupBoxDatabase
             // 
             this.groupBoxDatabase.Controls.Add(this.splitContainer2);
-            this.groupBoxDatabase.Location = new System.Drawing.Point(601, 210);
+            this.groupBoxDatabase.Location = new System.Drawing.Point(605, 12);
             this.groupBoxDatabase.Name = "groupBoxDatabase";
-            this.groupBoxDatabase.Size = new System.Drawing.Size(298, 125);
+            this.groupBoxDatabase.Size = new System.Drawing.Size(298, 121);
             this.groupBoxDatabase.TabIndex = 2;
             this.groupBoxDatabase.TabStop = false;
             this.groupBoxDatabase.Text = "Database Maintenance Settings";
             // 
             // grpSimpleMode
             // 
+            this.grpSimpleMode.Controls.Add(this.btnResetFromDev);
+            this.grpSimpleMode.Controls.Add(this.btnResetFromALocation);
             this.grpSimpleMode.Controls.Add(this.btnResetShardDB);
             this.grpSimpleMode.Controls.Add(this.btnRestWorldDB);
             this.grpSimpleMode.Controls.Add(this.btnResetAuthDB);
             this.grpSimpleMode.Controls.Add(this.btnResetAllData);
             this.grpSimpleMode.Location = new System.Drawing.Point(12, 70);
             this.grpSimpleMode.Name = "grpSimpleMode";
-            this.grpSimpleMode.Size = new System.Drawing.Size(440, 87);
+            this.grpSimpleMode.Size = new System.Drawing.Size(440, 89);
             this.grpSimpleMode.TabIndex = 3;
             this.grpSimpleMode.TabStop = false;
-            this.grpSimpleMode.Text = "Simple Mode / Automated (WARNING, BE CAREFUL WITH THIS TOOL!)";
+            this.grpSimpleMode.Text = "Step 2: Database Setup (WARNING, BE CAREFUL WITH THIS TOOL!)";
             // 
             // btnResetShardDB
             // 
-            this.btnResetShardDB.Location = new System.Drawing.Point(229, 19);
+            this.btnResetShardDB.Location = new System.Drawing.Point(177, 19);
             this.btnResetShardDB.Name = "btnResetShardDB";
-            this.btnResetShardDB.Size = new System.Drawing.Size(205, 26);
+            this.btnResetShardDB.Size = new System.Drawing.Size(128, 26);
             this.btnResetShardDB.TabIndex = 18;
-            this.btnResetShardDB.Text = "Setup / Reset Shard Database";
+            this.btnResetShardDB.Text = "Reset Shard Database";
             this.btnResetShardDB.UseVisualStyleBackColor = true;
             this.btnResetShardDB.Click += new System.EventHandler(this.BtnResetShardDB_Click);
             // 
             // btnRestWorldDB
             // 
-            this.btnRestWorldDB.Location = new System.Drawing.Point(298, 51);
+            this.btnRestWorldDB.Location = new System.Drawing.Point(311, 19);
             this.btnRestWorldDB.Name = "btnRestWorldDB";
-            this.btnRestWorldDB.Size = new System.Drawing.Size(136, 26);
+            this.btnRestWorldDB.Size = new System.Drawing.Size(123, 26);
             this.btnRestWorldDB.TabIndex = 17;
-            this.btnRestWorldDB.Text = "Setup / Reset World Database";
+            this.btnRestWorldDB.Text = "Reset World Database";
             this.btnRestWorldDB.UseVisualStyleBackColor = true;
             this.btnRestWorldDB.Click += new System.EventHandler(this.BtnRestWorldDB_Click);
             // 
@@ -239,19 +243,19 @@
             // 
             this.btnResetAuthDB.Location = new System.Drawing.Point(6, 19);
             this.btnResetAuthDB.Name = "btnResetAuthDB";
-            this.btnResetAuthDB.Size = new System.Drawing.Size(217, 26);
+            this.btnResetAuthDB.Size = new System.Drawing.Size(165, 26);
             this.btnResetAuthDB.TabIndex = 16;
-            this.btnResetAuthDB.Text = "Setup / Reset Authentication Database";
+            this.btnResetAuthDB.Text = "Reset Authentication Database";
             this.btnResetAuthDB.UseVisualStyleBackColor = true;
             this.btnResetAuthDB.Click += new System.EventHandler(this.BtnResetAuthDB_Click);
             // 
             // btnResetAllData
             // 
-            this.btnResetAllData.Location = new System.Drawing.Point(6, 51);
+            this.btnResetAllData.Location = new System.Drawing.Point(6, 55);
             this.btnResetAllData.Name = "btnResetAllData";
-            this.btnResetAllData.Size = new System.Drawing.Size(286, 26);
+            this.btnResetAllData.Size = new System.Drawing.Size(138, 26);
             this.btnResetAllData.TabIndex = 5;
-            this.btnResetAllData.Text = "Setup / Reset All databases to current (do all the things!)";
+            this.btnResetAllData.Text = "Reset ALL from Database Folder";
             this.btnResetAllData.UseVisualStyleBackColor = true;
             this.btnResetAllData.Click += new System.EventHandler(this.BtnResetAllData_Click);
             // 
@@ -486,12 +490,12 @@
             this.grpBackupRestore.Controls.Add(this.btnLoadAuthBackup);
             this.grpBackupRestore.Controls.Add(this.btnLoadAShardBacup);
             this.grpBackupRestore.Controls.Add(this.btnLoadAWorldBackup);
-            this.grpBackupRestore.Location = new System.Drawing.Point(459, 97);
+            this.grpBackupRestore.Location = new System.Drawing.Point(458, 224);
             this.grpBackupRestore.Name = "grpBackupRestore";
-            this.grpBackupRestore.Size = new System.Drawing.Size(440, 107);
+            this.grpBackupRestore.Size = new System.Drawing.Size(445, 107);
             this.grpBackupRestore.TabIndex = 4;
             this.grpBackupRestore.TabStop = false;
-            this.grpBackupRestore.Text = "Backup / Restore";
+            this.grpBackupRestore.Text = "Advanced: Backup / Restore";
             this.grpBackupRestore.Visible = false;
             // 
             // btnBackupAuth
@@ -541,12 +545,12 @@
             this.grpCreatDelete.Controls.Add(this.btnDropShardDB);
             this.grpCreatDelete.Controls.Add(this.btnAuthUpdates);
             this.grpCreatDelete.Controls.Add(this.btnShardUpdates);
-            this.grpCreatDelete.Location = new System.Drawing.Point(12, 169);
+            this.grpCreatDelete.Location = new System.Drawing.Point(12, 165);
             this.grpCreatDelete.Name = "grpCreatDelete";
             this.grpCreatDelete.Size = new System.Drawing.Size(439, 166);
             this.grpCreatDelete.TabIndex = 5;
             this.grpCreatDelete.TabStop = false;
-            this.grpCreatDelete.Text = "Create / Delete";
+            this.grpCreatDelete.Text = "Developers Only: Create / Delete";
             this.grpCreatDelete.Visible = false;
             // 
             // grpDownload
@@ -558,7 +562,7 @@
             this.grpDownload.Size = new System.Drawing.Size(440, 52);
             this.grpDownload.TabIndex = 8;
             this.grpDownload.TabStop = false;
-            this.grpDownload.Text = "Download (Required loading schema and World data, aka do first!)";
+            this.grpDownload.Text = "Step 1: Initialize Data and Backup Existing";
             // 
             // btnBackupAllData
             // 
@@ -573,9 +577,9 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = global::ACEManager.Properties.Resources.ACEMULATOR_LOGO;
-            this.pictureBox1.Location = new System.Drawing.Point(457, 210);
+            this.pictureBox1.Location = new System.Drawing.Point(458, 12);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(138, 125);
+            this.pictureBox1.Size = new System.Drawing.Size(141, 121);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 9;
             this.pictureBox1.TabStop = false;
@@ -583,14 +587,35 @@
             // txtBxDBLog
             // 
             this.txtBxDBLog.CausesValidation = false;
-            this.txtBxDBLog.Location = new System.Drawing.Point(459, 12);
+            this.txtBxDBLog.Location = new System.Drawing.Point(458, 139);
             this.txtBxDBLog.Multiline = true;
             this.txtBxDBLog.Name = "txtBxDBLog";
             this.txtBxDBLog.ReadOnly = true;
             this.txtBxDBLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtBxDBLog.Size = new System.Drawing.Size(440, 79);
+            this.txtBxDBLog.Size = new System.Drawing.Size(447, 79);
             this.txtBxDBLog.TabIndex = 10;
             this.txtBxDBLog.TabStop = false;
+            // 
+            // btnResetFromALocation
+            // 
+            this.btnResetFromALocation.Location = new System.Drawing.Point(292, 55);
+            this.btnResetFromALocation.Name = "btnResetFromALocation";
+            this.btnResetFromALocation.Size = new System.Drawing.Size(138, 26);
+            this.btnResetFromALocation.TabIndex = 19;
+            this.btnResetFromALocation.Text = "Reset All from a location";
+            this.btnResetFromALocation.UseVisualStyleBackColor = true;
+            this.btnResetFromALocation.Visible = false;
+            // 
+            // btnResetFromDev
+            // 
+            this.btnResetFromDev.Location = new System.Drawing.Point(150, 55);
+            this.btnResetFromDev.Name = "btnResetFromDev";
+            this.btnResetFromDev.Size = new System.Drawing.Size(136, 26);
+            this.btnResetFromDev.TabIndex = 20;
+            this.btnResetFromDev.Text = "Reset All from ACE folder";
+            this.btnResetFromDev.UseVisualStyleBackColor = true;
+            this.btnResetFromDev.Visible = false;
+            this.btnResetFromDev.Click += new System.EventHandler(this.btnResetFromDev_Click);
             // 
             // DatabaseMaintenanceForm
             // 
@@ -598,7 +623,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(904, 340);
+            this.ClientSize = new System.Drawing.Size(915, 336);
             this.Controls.Add(this.txtBxDBLog);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.grpDownload);
@@ -608,9 +633,7 @@
             this.Controls.Add(this.groupBoxDatabase);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(920, 379);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(920, 379);
             this.Name = "DatabaseMaintenanceForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Database Maintenance";
@@ -681,5 +704,7 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TextBox txtBxDBLog;
         private System.Windows.Forms.Button btnBackupAllData;
+        private System.Windows.Forms.Button btnResetFromDev;
+        private System.Windows.Forms.Button btnResetFromALocation;
     }
 }
