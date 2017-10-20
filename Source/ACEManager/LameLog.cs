@@ -38,6 +38,7 @@ namespace ACEManager
                 Console.WriteLine("Avoiding log save due to configuration setting.");
                 return;
             }
+            else
             {
                 // attempt at saving log to log location...
                 var logLocation = Path.GetTempPath();
@@ -81,17 +82,23 @@ namespace ACEManager
 
         public static string StripNewlines(string inputString)
         {
-            int length = inputString.Length;
-            char[] result = new char[length];
-            int count = 0;
-
-            for (int i = 0; i < length; i++)
+            // somehow a null got in there
+            if (inputString != null)
             {
-                char c = inputString[i];
-                if (c != '\r' && c != '\n')
-                    result[count++] = c;
+                int length = inputString.Length;
+                char[] result = new char[length];
+                int count = 0;
+
+                for (int i = 0; i < length; i++)
+                {
+                    char c = inputString[i];
+                    if (c != '\r' && c != '\n')
+                        result[count++] = c;
+                }
+                return new String(result, 0, count);
             }
-            return new String(result, 0, count);
+            else
+                return "";
         }
     }
 }

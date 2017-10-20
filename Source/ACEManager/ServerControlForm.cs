@@ -199,7 +199,8 @@ namespace ACEManager
                 }
             }
         }
-        async Task PutTaskDelay()
+
+        private async Task PutTaskDelay()
         {
             await Task.Delay(100);
         }
@@ -275,6 +276,22 @@ namespace ACEManager
                 consoleControl1.WriteInput(rchTxtBxConsoleInput.Text, Color.LimeGreen, false);
             }
             rchTxtBxConsoleInput.Clear();
+        }
+
+        private string OpenUserFileDialog()
+        {
+            OpenFileDialog fileSelect = new OpenFileDialog();
+            fileSelect.InitialDirectory = Path.GetFullPath(".");
+            fileSelect.Filter = "Text files (*.text)|*.txt|All files (*.*)|*.*";
+            fileSelect.FilterIndex = 4;
+            fileSelect.RestoreDirectory = true;
+
+            string filePath = "";
+            if (fileSelect.ShowDialog() == DialogResult.OK)
+            {
+                filePath = fileSelect.FileName;
+            }
+            return filePath;
         }
 
         private void TimerUpdateStatus_Tick(object sender, EventArgs e)
@@ -353,7 +370,7 @@ namespace ACEManager
                             string userFile = ACEManager.Config.UserFilePath;
                             string[] users = { };
                             // if config var exists, ask to load or ask for a folder
-                            if(userFile?.Length > 0)
+                            if (userFile?.Length > 0)
                             {
                                 DialogResult res = MessageBox.Show($"Would you like to load the user file from: {ACEManager.Config.UserFilePath}", "Change user file path?", MessageBoxButtons.YesNoCancel);
                                 switch (res)
@@ -369,7 +386,7 @@ namespace ACEManager
                             }
                             if (string.IsNullOrEmpty(ACEManager.Config.UserFilePath))
                             {
-                                userFile = ACEManager.DatabaseMaintenanceForm.OpenFileDialog();
+                                userFile = OpenUserFileDialog();
                             }
                             if (userFile?.Length > 0)
                             {
@@ -384,7 +401,6 @@ namespace ACEManager
                                 finally
                                 {
                                     ACEManager.Config.UserFilePath = userFile;
-                                    
                                 }
                             }
                             else

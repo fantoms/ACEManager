@@ -130,7 +130,7 @@ namespace ACEManager
         private void GetAllUpdates()
         {
             // Create missing folders, if needed.
-            if (!CheckBackupPath())
+            if (!CheckDataPath())
             {
                 LogText("Error in data repository, click download data again!");
                 return;
@@ -492,9 +492,9 @@ namespace ACEManager
         /// <param name="message">String containing message to log.</param>
         public void LogText(string message)
         {
-            var logData = Environment.NewLine + message;
+            var logData = message;
             ACEManager.Log.AddLogLine(message);
-            txtBxDBLog.AppendText(logData);
+            if (ACEManager.CommandLineOptions.ActionToPerform == CommandLineAction.DoNothing) txtBxDBLog.AppendText(Environment.NewLine + logData);
         }
 
         /// <summary>
@@ -547,12 +547,12 @@ namespace ACEManager
         private bool CheckBackupPath()
         {
             string backupRepository;
-            if (ACEManager.Config.BackupPath?.Length > 0)
+            if (ConfigManager.BackupPath?.Length > 0)
             {
-                backupRepository = Path.GetFullPath(ACEManager.Config.BackupPath);
+                backupRepository = Path.GetFullPath(ConfigManager.BackupPath);
             }
             else
-                backupRepository = "";
+                backupRepository = ACEManager.Config.BackupPath;
 
             // Testing to see if we can save data in the path saved in the config
             if (backupRepository?.Length > 0)
@@ -585,7 +585,8 @@ namespace ACEManager
             }
             // finally set the path and return success (true)
             // this means, the path exists and we can write too it
-            ConfigManager.SetBackupPath(backupRepository);
+            if (backupRepository != ConfigManager.BackupPath)
+                ConfigManager.SetBackupPath(backupRepository);
             return true;
         }
 
@@ -884,14 +885,14 @@ namespace ACEManager
         /// </summary>
         public void LoadAllBackups()
         {
-            DisableWarnings = true;
+            // This will prevent anything from stopping you, if you accidently overwrite:Don't use DisableWarnings = true;
             BtnLoadLastAuthBackup_Click(null, null);
             BtnLoadLastShardBackup_Click(null, null);
             BtnLoadLastWorldBackup_Click(null, null);
-            DisableWarnings = false;
+            // This will prevent anything from stopping you, if you accidently overwrite: DisableWarnings = false;
         }
 
-        public string OpenFileDialog()
+        private string OpenFileDialog()
         {
             if (!CheckBackupPath())
             {
@@ -914,7 +915,7 @@ namespace ACEManager
             return filePath;
         }
 
-        public bool OpenFolderDialog()
+        private bool OpenFolderDialog()
         {
             if (!CheckDataPath())
             {

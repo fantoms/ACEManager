@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace ACEManager
 {
+    /// <summary>
+    /// This class was created in a interpreted script pattern, too automate functions of the GUI.
+    /// </summary>
     public static class CommandAutomation
     {
         /// <summary>
@@ -39,10 +42,9 @@ namespace ACEManager
             
             // Reset config
             if (ACEManager.CommandLineOptions.DataPath != null) ConfigManager.SetDataPath(ACEManager.CommandLineOptions.DataPath);
-            if (ACEManager.CommandLineOptions.BackupPath != null) ConfigManager.SetDataPath(ACEManager.CommandLineOptions.BackupPath);
-            if (ACEManager.CommandLineOptions.UserFilePath != null) ACEManager.Config.UserFilePath = ACEManager.CommandLineOptions.UserFilePath;
+            if (ACEManager.CommandLineOptions.BackupPath != null) ConfigManager.SetBackupPath(ACEManager.CommandLineOptions.BackupPath);
 
-                var message = "DB: " + Enum.GetName(typeof(DefaultACEDatabase), db) + " Running: " + Enum.GetName(typeof(CommandLineAction), ACEManager.CommandLineOptions.ActionToPerform);
+            var message = "DB: " + Enum.GetName(typeof(DefaultACEDatabase), db) + " Running: " + Enum.GetName(typeof(CommandLineAction), ACEManager.CommandLineOptions.ActionToPerform);
             ACEManager.Log.AddLogLine(message);
             Console.WriteLine(message);
             ACEManager.DatabaseMaintenanceForm.PopulateFormControls();
@@ -115,19 +117,70 @@ namespace ACEManager
                             break;
                     }
                     break;
-                case CommandLineAction.LoadWorldUpdates:
+                case CommandLineAction.BackupLoadWorldUpdates:
+                    // Backup the world database before overwritting?
+                    ACEManager.DatabaseMaintenanceForm.BtnBackupWorld_Click(null, null);
+                    ACEManager.DatabaseMaintenanceForm.BtnDownloadUpdates_Click(null, null);
                     ACEManager.DatabaseMaintenanceForm.BtnWorldUpdates_Click(null, null);
                     break;
-                case CommandLineAction.DownloadBackupResetAll:
+                case CommandLineAction.LoadWorldUpdates:
                     ACEManager.DatabaseMaintenanceForm.BtnDownloadUpdates_Click(null, null);
-                    ACEManager.DatabaseMaintenanceForm.BtnBackupAllData_Click(null, null);
-                    ACEManager.DatabaseMaintenanceForm.BtnResetAllData_Click(null, null);
+                    ACEManager.DatabaseMaintenanceForm.BtnWorldUpdates_Click(null, null);
                     break;
-                case CommandLineAction.DownloadResetAll:
+                case CommandLineAction.DownloadBackupReset:
                     ACEManager.DatabaseMaintenanceForm.BtnDownloadUpdates_Click(null, null);
-                    ACEManager.DatabaseMaintenanceForm.BtnResetAllData_Click(null, null);
+                    switch (db)
+                    {
+                        case DefaultACEDatabase.None:
+                            message = "Sorry, no database selected. Please pass in a database to use this action.";
+                            ACEManager.Log.AddLogLine(message);
+                            Console.WriteLine(message);
+                            break;
+                        case DefaultACEDatabase.All:
+                            ACEManager.DatabaseMaintenanceForm.BtnBackupAllData_Click(null, null);
+                            ACEManager.DatabaseMaintenanceForm.BtnResetAllData_Click(null, null);
+                            break;
+                        case DefaultACEDatabase.Authentication:
+                            ACEManager.DatabaseMaintenanceForm.BtnBackupAuth_Click(null, null);
+                            ACEManager.DatabaseMaintenanceForm.BtnResetAuth_Click(null, null);
+                            break;
+                        case DefaultACEDatabase.Shard:
+                            ACEManager.DatabaseMaintenanceForm.BtnBackupShard_Click(null, null);
+                            ACEManager.DatabaseMaintenanceForm.BtnResetShard_Click(null, null);
+                            break;
+                        case DefaultACEDatabase.World:
+                            ACEManager.DatabaseMaintenanceForm.BtnBackupWorld_Click(null, null);
+                            ACEManager.DatabaseMaintenanceForm.BtnResetWorld_Click(null, null);
+                            break;
+                    }
+                    break;
+                case CommandLineAction.DownloadReset:
+                    ACEManager.DatabaseMaintenanceForm.BtnDownloadUpdates_Click(null, null);
+                    switch (db)
+                    {
+                        case DefaultACEDatabase.None:
+                            message = "Sorry, no database selected. Please pass in a database to use this action.";
+                            ACEManager.Log.AddLogLine(message);
+                            Console.WriteLine(message);
+                            break;
+                        case DefaultACEDatabase.All:
+                            ACEManager.DatabaseMaintenanceForm.BtnResetAllData_Click(null, null);
+                            break;
+                        case DefaultACEDatabase.Authentication:
+                            ACEManager.DatabaseMaintenanceForm.BtnResetAuth_Click(null, null);
+                            break;
+                        case DefaultACEDatabase.Shard:
+                            ACEManager.DatabaseMaintenanceForm.BtnResetShard_Click(null, null);
+                            break;
+                        case DefaultACEDatabase.World:
+                            ACEManager.DatabaseMaintenanceForm.BtnResetWorld_Click(null, null);
+                            break;
+                    }
                     break;
             }
+            message = "Actions finished!";
+            ACEManager.Log.AddLogLine(message);
+            Console.WriteLine(message);
         }
     }
 }

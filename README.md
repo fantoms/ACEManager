@@ -8,11 +8,26 @@
 
 ***
 
+## Features
+
+* Wraps the ACEMulator processes letting you control and interact with the console using a windows gui.
+* Starts, Stops, and Auto-Restarts crashed or failed ACEMulator processes.
+* Displays the raw output from the ACEMulator console, for easier debugging.
+* Automates the database steps needed when setting up a new ACEMulator server.
+* Downloads the latest ACEMulator server master data packages, from Github.
+* MySQL/MariaDB Database Maintenance and data uploader.
+* Allows for rudimentary user importing through an active console.
+
+***
+
 ## Getting Started
 
 * Compiling with Visual Studio 2015
 * Run the program once to create a new config file and then Close the application.
 * Edit the `Config.json` file and re-run the application.
+* Click on the UPPER LEFT menu Icon, to display additional functions:
+
+<img src=https://i.imgur.com/nVIWUdD.png>
 
 ## Contributions
 
