@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-
 namespace ACEManager
 {
     public static class ACEManager
@@ -31,6 +30,11 @@ namespace ACEManager
         public static DatabaseMaintenanceForm DatabaseMaintenanceForm;
 
         /// <summary>
+        /// Commahnd Line Arguments, configured durring application initialization.
+        /// </summary>
+        public static Options CommandLineOptions;
+
+        /// <summary>
         /// Event registered boolean set to true when configuration has been updated from the ConfigurationForm.
         /// </summary>
         public static bool ConfigurationUpdateRequired;
@@ -39,7 +43,7 @@ namespace ACEManager
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        public static void Main()
+        public static void Main(string[] args)
         {
             Log.AddLogLine("Starting...");
 
@@ -68,18 +72,33 @@ namespace ACEManager
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            CommandLineOptions = new Options();
+
+            // Replace config settings with command line override:
+            // If there is an issue parsing the command line arguments, we will bail out and Exit the app.
+            if (!CommandAutomation.ParseCommandLine(args))
+                Environment.Exit(1);
+
             // Instance the forms
             AboutForm = new AboutForm();
             ConfigurationForm = new ConfigurationForm();
-            DatabaseMaintenanceForm = new DatabaseMaintenanceForm();            
+            // This needs to be explicitly after the command line parse to override 
+            DatabaseMaintenanceForm = new DatabaseMaintenanceForm();
 
-            // Run main
-            Application.Run(new ServerControlForm());
-
-            // Finish
-            if (!Config.Equals(ConfigManager.StartingConfiguration))
-                ConfigManager.Save(Config);
-
+            if (CommandLineOptions.ActionToPerform != CommandLineAction.DoNothing)
+            {
+                // run action and close
+                CommandAutomation.RunActions();
+            }
+            else
+            {
+                // Run main
+                Application.Run(new ServerControlForm());
+                // Finish
+                if (!Config.Equals(ConfigManager.StartingConfiguration))
+                    ConfigManager.Save(Config);
+            }
+            
             // Finally append exit to log
             Log.AddLogLine("...Exiting.");
         }

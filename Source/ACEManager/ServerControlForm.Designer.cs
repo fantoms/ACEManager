@@ -152,7 +152,7 @@
             this.consoleControl1.Size = new System.Drawing.Size(813, 330);
             this.consoleControl1.TabIndex = 8;
             // 
-            // FormServerControl
+            // ServerControlForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -167,7 +167,7 @@
             this.Controls.Add(this.btnStopNow);
             this.Controls.Add(this.btnKill);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "FormServerControl";
+            this.Name = "ServerControlForm";
             this.Text = "ACE Manager";
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.FormServerControl_Paint);
             this.ResumeLayout(false);

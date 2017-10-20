@@ -25,8 +25,8 @@ namespace ACEManager
             txtBxAceServerExe.Text = ACEManager.Config.AceServerExecutable;
             txtBxAceServerArgs.Text = ACEManager.Config.AceServerArguments;
             txtBxLocalLogPath.Text = ACEManager.Config.LocalLogPath;
-            txtBxLogDataFormat.Text = ACEManager.Config.LogDataFormat;
-            txtBxLogFilenameFormat.Text = ACEManager.Config.LogFilenameFormat;
+            txtBxLogDataFormat.Text = ACEManager.Config.LogLineDateFormat;
+            txtBxLogFilenameFormat.Text = ACEManager.Config.LogFilenameDateFormat;
             txtBxDBHost.Text = ACEManager.Config.DatabaseHost;
             txtBxDBPort.Text = ACEManager.Config.DatabasePort.ToString();
             txtBxDBUsername.Text = ACEManager.Config.DatabaseUsername;
@@ -44,8 +44,8 @@ namespace ACEManager
             ACEManager.Config.AceServerExecutable = txtBxAceServerExe.Text;
             ACEManager.Config.AceServerArguments = txtBxAceServerArgs.Text;
             ACEManager.Config.LocalLogPath = txtBxLocalLogPath.Text;
-            ACEManager.Config.LogDataFormat = txtBxLogDataFormat.Text;
-            ACEManager.Config.LogFilenameFormat = txtBxLogFilenameFormat.Text;
+            ACEManager.Config.LogLineDateFormat = txtBxLogDataFormat.Text;
+            ACEManager.Config.LogFilenameDateFormat = txtBxLogFilenameFormat.Text;
             ACEManager.Config.DatabaseHost = txtBxDBHost.Text;
             ACEManager.Config.DatabasePort = Int32.Parse(txtBxDBPort.Text);
             ACEManager.Config.DatabaseUsername = txtBxDBUsername.Text;

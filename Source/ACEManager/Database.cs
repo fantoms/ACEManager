@@ -12,53 +12,19 @@ namespace ACEManager
         private static string CurrentDatabase { get; set; }
         public static MySqlConnection Connect(string databaseName)
         {
+            // Timouet Defaults:
+            // ConnectionTimeout = 15
+            // DefaultCommandTimeout = 30
+            // ConnectionLifeTime = 0
             if (string.IsNullOrEmpty(DBConnectionString) || CurrentDatabase != databaseName)
-                DBConnectionString = @"SERVER=" + ACEManager.Config.DatabaseHost + ";PORT=" + ACEManager.Config.DatabasePort + ";UID=" + ACEManager.Config.DatabaseUsername + ";PASSWORD=" + ACEManager.Config.DatabasePassword + ";" + (!string.IsNullOrEmpty(databaseName) ? "DATABASE=" + databaseName : "") + ";Allow User Variables=True;charset=utf8;convertzerodatetime=true;";
+                DBConnectionString = @"SERVER=" + ACEManager.Config.DatabaseHost + ";PORT=" + ACEManager.Config.DatabasePort + ";UID=" + ACEManager.Config.DatabaseUsername + ";PASSWORD=" + ACEManager.Config.DatabasePassword + ";" + (!string.IsNullOrEmpty(databaseName) ? "DATABASE=" + databaseName : "") + ";Allow User Variables=True;charset=utf8;convertzerodatetime=true;ConnectionTimeout=360;DefaultCommandTimeout=358;ConnectionLifeTime=3000;";
             
             MySqlConnection connection = new MySqlConnection(DBConnectionString);
             connection.Open();
             return connection;
         }
 
-        private static string _BackupDatabase(string backupDestination, string databaseName)
-        {
-            string results;
-            using (MySqlConnection connection = Database.Connect(databaseName))
-            {
-                using (MySqlCommand query = connection.CreateCommand())
-                {
-                    using (MySqlBackup mb = new MySqlBackup(query))
-                    {
-                        query.Connection = connection;
-                        mb.ExportToFile(backupDestination);
-                        connection.Close();
-                        results = mb.ExportInfo.IntervalForProgressReport.ToString();
-                    }
-                }
-            }
-            return results;
-        }
-
-        private static string _RestoreDatabase(string backupDestination, string databaseName)
-        {
-            string results;
-            using (MySqlConnection connection = Database.Connect(databaseName))
-            {
-                using (MySqlCommand query = connection.CreateCommand())
-                {
-                    using (MySqlBackup mb = new MySqlBackup(query))
-                    {
-                        query.Connection = connection;
-                        mb.ImportFromFile(backupDestination);
-                        connection.Close();
-                        results = mb.ImportInfo.IntervalForProgressReport.ToString();
-                    }
-                }
-            }
-            return results;
-        }
-
-        public static string BackupDatabase(string backupDestination, string databaseName)
+        public static string ExecuteBackup(string backupDestination, string databaseName)
         {
             if (backupDestination.Length == 0 || databaseName.Length == 0)
                 return $"Error: invalid input";
@@ -66,7 +32,7 @@ namespace ACEManager
             var result = "";
             try
             {
-                result = _BackupDatabase(backupDestination, databaseName);
+                result = BackupDatabase(backupDestination, databaseName);
             }
             catch (SqlException ex)
             {
@@ -107,7 +73,7 @@ namespace ACEManager
             return $"{result}";
         }
 
-        public static string RestoreDatabase(string backupSource, string databaseName)
+        public static string ExecuteRestore(string backupSource, string databaseName)
         {
             if (backupSource.Length == 0 || databaseName.Length == 0)
                 return $"Error: invalid input";
@@ -115,7 +81,7 @@ namespace ACEManager
             var result = "";
             try
             {
-                result = _RestoreDatabase(backupSource, databaseName);
+                result = RestoreDatabase(backupSource, databaseName);
             }
             catch (SqlException ex)
             {
@@ -156,12 +122,12 @@ namespace ACEManager
             return $"{result}";
         }
 
-        public static string Execute(string script, string databaseName)
+        public static string ExecuteQuery(string query, string databaseName)
         {
             var result = "";
             try
             {
-                result = Query(script, databaseName);
+                result = QueryDatabase(query, databaseName);
             }
             catch (SqlException ex)
             {
@@ -206,7 +172,7 @@ namespace ACEManager
             var result = "";
             try
             {
-                result = QueryScript(script, databaseName);
+                result = RunScript(script, databaseName);
             }
             catch (SqlException ex)
             {
@@ -247,21 +213,21 @@ namespace ACEManager
             return $"{result}";
         }
 
-        private static string Query(string script, string databaseName)
+        private static string QueryDatabase(string query, string databaseName)
         {
             var resultString = "";
             using (MySqlConnection connection = Database.Connect(databaseName))
-            using (MySqlCommand query = connection.CreateCommand())
+            using (MySqlCommand command = connection.CreateCommand())
             {
-                query.CommandText = script;
-                MySqlDataReader reader = query.ExecuteReader();
+                command.CommandText = query;
+                MySqlDataReader reader = command.ExecuteReader();
                 resultString += $"Affected Rows: {reader.RecordsAffected}";
                 connection.Close();
             }
             return resultString;
         }
 
-        private static string QueryScript(string script, string databaseName)
+        private static string RunScript(string script, string databaseName)
         {
             var resultString = "";
             using (MySqlConnection connection = Database.Connect(databaseName))
@@ -282,7 +248,7 @@ namespace ACEManager
             return resultString;
         }
 
-        private static List<string> DatabaseTables(string databaseName)
+        private static List<string> GetTableList(string databaseName)
         {
             List<string> results = new List<string>();
             using (MySqlConnection connection = Database.Connect(databaseName))
@@ -304,7 +270,7 @@ namespace ACEManager
         {
             string result = string.Empty;
             // go through each table and truncate
-            List<string> databaseTables = DatabaseTables(databaseName);
+            List<string> databaseTables = GetTableList(databaseName);
             if (databaseTables.Count > 0)
             {
                 try
@@ -352,6 +318,44 @@ namespace ACEManager
             }
             else
                 return "No tables found!";
+        }
+
+        private static string BackupDatabase(string backupDestination, string databaseName)
+        {
+            string results;
+            using (MySqlConnection connection = Database.Connect(databaseName))
+            {
+                using (MySqlCommand query = connection.CreateCommand())
+                {
+                    using (MySqlBackup mb = new MySqlBackup(query))
+                    {
+                        query.Connection = connection;
+                        mb.ExportToFile(backupDestination);
+                        connection.Close();
+                        results = mb.ExportInfo.IntervalForProgressReport.ToString();
+                    }
+                }
+            }
+            return results;
+        }
+
+        private static string RestoreDatabase(string backupDestination, string databaseName)
+        {
+            string results;
+            using (MySqlConnection connection = Database.Connect(databaseName))
+            {
+                using (MySqlCommand query = connection.CreateCommand())
+                {
+                    using (MySqlBackup mb = new MySqlBackup(query))
+                    {
+                        query.Connection = connection;
+                        mb.ImportFromFile(backupDestination);
+                        connection.Close();
+                        results = mb.ImportInfo.IntervalForProgressReport.ToString();
+                    }
+                }
+            }
+            return results;
         }
 
         public static int GetExceptionNumber(MySqlException my)

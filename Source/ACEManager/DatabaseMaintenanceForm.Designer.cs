@@ -258,7 +258,7 @@
             this.btnResetShardDB.TabIndex = 18;
             this.btnResetShardDB.Text = "Reset Shard Database";
             this.btnResetShardDB.UseVisualStyleBackColor = true;
-            this.btnResetShardDB.Click += new System.EventHandler(this.BtnResetShardDB_Click);
+            this.btnResetShardDB.Click += new System.EventHandler(this.BtnResetShard_Click);
             // 
             // btnRestWorldDB
             // 
@@ -268,7 +268,7 @@
             this.btnRestWorldDB.TabIndex = 17;
             this.btnRestWorldDB.Text = "Reset World Database";
             this.btnRestWorldDB.UseVisualStyleBackColor = true;
-            this.btnRestWorldDB.Click += new System.EventHandler(this.BtnRestWorldDB_Click);
+            this.btnRestWorldDB.Click += new System.EventHandler(this.BtnResetWorld_Click);
             // 
             // btnResetAuthDB
             // 
@@ -278,7 +278,7 @@
             this.btnResetAuthDB.TabIndex = 16;
             this.btnResetAuthDB.Text = "Reset Authentication Database";
             this.btnResetAuthDB.UseVisualStyleBackColor = true;
-            this.btnResetAuthDB.Click += new System.EventHandler(this.BtnResetAuthDB_Click);
+            this.btnResetAuthDB.Click += new System.EventHandler(this.BtnResetAuth_Click);
             // 
             // btnClearWorldData
             // 
@@ -498,7 +498,7 @@
             this.btnLoadAuthBackup.TabIndex = 19;
             this.btnLoadAuthBackup.Text = "Load Last Auth Backup";
             this.btnLoadAuthBackup.UseVisualStyleBackColor = true;
-            this.btnLoadAuthBackup.Click += new System.EventHandler(this.BtnLoadAuthBackup_Click);
+            this.btnLoadAuthBackup.Click += new System.EventHandler(this.BtnLoadLastAuthBackup_Click);
             // 
             // grpBackupRestore
             // 

@@ -10,7 +10,7 @@ namespace ACEManager
     public class LameLog
     {
         // Set's constants to be overriden by config defaults
-        public const string LogFilenameFormat = "yyyy-M-dd_HH-mm-ss";
+        public const string LogFilenameDateFormat = "yyyy-M-dd_HH-mm-ss";
         public const string LogFilenameExt = ".log";
         public const string LogDataFormat = "yyyy-M-dd_HH-mm-ss.ffff";
 
@@ -41,7 +41,7 @@ namespace ACEManager
             {
                 // attempt at saving log to log location...
                 var logLocation = Path.GetTempPath();
-                var logFilenameFormat = LogFilenameFormat;
+                var logFilenameDateFormat = LogFilenameDateFormat;
                 var logDataFormat = LogDataFormat;
 
                 // What IF: No CONFIG?!
@@ -50,17 +50,17 @@ namespace ACEManager
                     logLocation = ACEManager.Config.LocalLogPath;
                 }
 
-                if (!string.IsNullOrEmpty(ACEManager.Config.LogFilenameFormat))
+                if (!string.IsNullOrEmpty(ACEManager.Config.LogFilenameDateFormat))
                 {
-                    logFilenameFormat = ACEManager.Config.LogFilenameFormat;
+                    logFilenameDateFormat = ACEManager.Config.LogFilenameDateFormat;
                 }
 
-                if (!string.IsNullOrEmpty(ACEManager.Config.LogDataFormat))
+                if (!string.IsNullOrEmpty(ACEManager.Config.LogLineDateFormat))
                 {
-                    logDataFormat = ACEManager.Config.LogDataFormat;
+                    logDataFormat = ACEManager.Config.LogLineDateFormat;
                 }
 
-                var logFileName = DateTime.Now.ToString(logFilenameFormat) + LogFilenameExt;
+                var logFileName = DateTime.Now.ToString(logFilenameDateFormat) + LogFilenameExt;
 
                 try
                 {

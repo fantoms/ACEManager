@@ -30,8 +30,12 @@ namespace ACEManager
         /// </summary>
         public const int ext_SYSMENU_DBMAINT_ID = 0x2;
         /// <summary>
+        /// ID for the Database Maintenance item on the system menu
+        /// </summary>
+        public const int ext_SYSMENU_USERUPLOAD_ID = 0x3;
+        /// <summary>
         /// ID for the About item on the system menu
         /// </summary>
-        public const int ext_SYSMENU_ABOUT_ID = 0x3;
+        public const int ext_SYSMENU_ABOUT_ID = 0x4;
     }
 }

@@ -54,17 +54,26 @@ namespace ACEManager
             InitializeComponent();
         }
 
+        /// <summary>
+        /// This is an event delegate for use with the Database class to receieve Errors from the Database.
+        /// </summary>
         public void Database_MySqlError(object sender, MySqlScriptErrorEventArgs e)
         {
             ErrorResult = e.Exception.Message;
             LogText("Error in script:" + ErrorResult);
         }
 
+        /// <summary>
+        /// This is an event delegate for use with the Database class to show Lame Progress from the Database.
+        /// </summary>
         public void Database_StatementExecuted(object sender, MySqlScriptEventArgs e)
         {
             LogText("Loading...");
         }
 
+        /// <summary>
+        /// This is an event delegate for use with the Database class to report when the functions have fininished.
+        /// </summary>
         public void Database_StatementCompleted(object sender, EventArgs e)
         {
             LogText("Scripts completed!");
@@ -80,10 +89,13 @@ namespace ACEManager
                     return;
                 }
             }
-            PopulateForm();
+            PopulateFormControls();
         }
 
-        private void PopulateForm()
+        /// <summary>
+        /// Loads in the initial settings from configuration.
+        /// </summary>
+        public void PopulateFormControls()
         {
             if (ACEManager.Config.AdvancedMode == true)
             {
@@ -94,11 +106,17 @@ namespace ACEManager
             txtBxDBWorldName.Text = ACEManager.Config.WorldDatabaseName;
         }
 
+        /// <summary>
+        /// Retrieves the latest zip file from Github. Make sure the GithubUrl is set!
+        /// </summary>
         private void GetLatestACEWorldData()
         {
             GetWebContent(GithubDownload, Path.Combine(ConfigManager.DataPath, GithubFilename));
         }
 
+        /// <summary>
+        /// Retrieves the latest Database Schemas from Github.
+        /// </summary>
         private void GetBaseSql()
         {
             GetWebContent(ACEManager.Config.AuthenticationBaseSqlUrl, Path.GetFullPath(Path.Combine(ConfigManager.DataPath, ACEManager.Config.BaseSqlPath, ACEManager.Config.AuthenticationBaseSqlFilename)));
@@ -106,10 +124,12 @@ namespace ACEManager
             GetWebContent(ACEManager.Config.WorldBaseSqlUrl, Path.GetFullPath(Path.Combine(ConfigManager.DataPath, ACEManager.Config.BaseSqlPath, ACEManager.Config.WorldBaseSqlFilename)));
         }
 
+        /// <summary>
+        /// Retrieves the latest Updates from Github.
+        /// </summary>
         private void GetAllUpdates()
         {
             // Create missing folders, if needed.
-
             if (!CheckBackupPath())
             {
                 LogText("Error in data repository, click download data again!");
@@ -161,6 +181,9 @@ namespace ACEManager
             }
         }
 
+        /// <summary>
+        /// Saves the current text for the text box, present in this form.
+        /// </summary>
         private void SaveSettings()
         {
             ACEManager.Config.AdvancedMode = chkBxAdvanced.Checked;
@@ -170,6 +193,9 @@ namespace ACEManager
             ConfigManager.Save(ACEManager.Config);
         }
 
+        /// <summary>
+        /// Retreieves a string from a web location.
+        /// </summary>
         private string GetWebString(string updateUrl)
         {
             LogText($"Remote: {updateUrl}");
@@ -193,6 +219,9 @@ namespace ACEManager
             return result;
         }
 
+        /// <summary>
+        /// Retreives a file from a web location.
+        /// </summary>
         private bool GetWebContent(string url, string destinationFilePath)
         {
             LogText($"Remote: {url} Local: {destinationFilePath}");
@@ -216,6 +245,9 @@ namespace ACEManager
             return true;
         }
 
+        /// <summary>
+        /// Attempts to create a database, with a name collected a Form Textbox.
+        /// </summary>
         private bool CreateDatabase(string databaseName)
         {
             LogText($"Creating database {databaseName}...");
@@ -227,7 +259,7 @@ namespace ACEManager
             }
             // Database.Reset();
             var dbQuery = "CREATE DATABASE IF NOT EXISTS `" + databaseName + "` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;";
-            var result = Database.Execute(dbQuery, "");
+            var result = Database.ExecuteQuery(dbQuery, "");
             if (result.Length > 0)
             {
                 LogText(result);
@@ -235,6 +267,9 @@ namespace ACEManager
             return true;
         }
 
+        /// <summary>
+        /// Attempts to Drop a database, with a name collected a Form Textbox.
+        /// </summary>
         private bool DropDatabase(string databaseName)
         {
             LogText($"DELETING database {databaseName}...");
@@ -246,7 +281,7 @@ namespace ACEManager
             }
 
             var dbQuery = "DROP DATABASE IF EXISTS `" + databaseName + "`;";
-            var result = Database.Execute(dbQuery, databaseName);
+            var result = Database.ExecuteQuery(dbQuery, databaseName);
             if (result.Length > 0)
             {
                 LogText(result);
@@ -254,6 +289,9 @@ namespace ACEManager
             return true;
         }
 
+        /// <summary>
+        /// Attempts to Load base database schema, with a name collected a Form Textbox.
+        /// </summary>
         private bool LoadBase(string databaseName, string baseFilename)
         {
             LogText($"Loading base for {databaseName}...");
@@ -279,7 +317,7 @@ namespace ACEManager
                         sqlInputFile = sqlInputFile.Replace("ace_shard", databaseName);
                         sqlInputFile = sqlInputFile.Replace("ace_world", databaseName);
                     }
-                var result = Database.Execute(sqlInputFile, databaseName);
+                var result = Database.ExecuteQuery(sqlInputFile, databaseName);
 
                 if (result.Length > 0)
                 {
@@ -289,6 +327,9 @@ namespace ACEManager
             return true;
         }
 
+        /// <summary>
+        /// Attempts to Load all updates present from a directory, into a name database with the name collected from a Form Textbox.
+        /// </summary>
         private bool LoadUpdates(string databaseName, string updatePath)
         {
             LogText($"Loading updates for {databaseName}...");
@@ -350,6 +391,9 @@ namespace ACEManager
             return true;
         }
 
+        /// <summary>
+        /// Attempts to Load all world data present from a directory, into a name database with the name collected from a Form Textbox.
+        /// </summary>
         private bool LoadWorld()
         {
             LogText($"Loading ACE-World!");
@@ -408,6 +452,9 @@ namespace ACEManager
             return true;
         }
 
+        /// <summary>
+        /// Attempts to extract a file from a directory, into a relative path. If ACEManager.Config.SaveOldWorldArchives is false, then the archive will also be deleted.
+        /// </summary>
         private void ExtractZip(string filePath, string destinationPath)
         {
             LogText($"Extracting Zip {filePath}...");
@@ -436,10 +483,13 @@ namespace ACEManager
                     LogText($"Deleting archive {filePath}");
                     File.Delete(filePath);
                 }
-
             }
         }
 
+        /// <summary>
+        /// Saves the text to screen and the LameLog object.
+        /// </summary>
+        /// <param name="message">String containing message to log.</param>
         public void LogText(string message)
         {
             var logData = Environment.NewLine + message;
@@ -447,6 +497,10 @@ namespace ACEManager
             txtBxDBLog.AppendText(logData);
         }
 
+        /// <summary>
+        /// Initial Warning Message that let's users know this tool is dangerous.
+        /// </summary>
+        /// <returns>true if user acces, false if user denies</returns>
         private bool YouveBeenWarned()
         {
             string message = "This software is in an experimental stage. If you use this, note that there is a chance your database will be lost or broken.\nIf this does not suite your taste, please wait until proper testing can be performed and do not use this product.";
@@ -458,6 +512,9 @@ namespace ACEManager
             return false;
         }
 
+        /// <summary>
+        /// Initial Warning Message that let's users know ADVANCED MODE IS THWARGLEY.
+        /// </summary>
         private bool HardMode()
         {
             string message = "This software is in an experimental stage. If you use this, note that there is a chance your database will be lost or broken.\nYou've chosen to turn on the advanced settings, so please note that you can break your database with the wrong click!";
@@ -469,16 +526,24 @@ namespace ACEManager
             return false;
         }
 
+        /// <summary>
+        /// Presents a hairy dialog warning that will let users accept or deny various warning messages.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private bool WarnUser(string message = "")
         {
             if (DisableWarnings) return true;
-            var result = MessageBox.Show("WARNING! You are about to change one or more databases-\n\n" + (message.Length > 0 ? message + "\n\n" : string.Empty) + "Are you certain that you want too proceed?!", "Warning!", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+            var result = MessageBox.Show("WARNING! You are about to change one or more databases and/or overwrite files:-\n\n" + (message.Length > 0 ? message + "\n\n" : string.Empty) + "Are you certain that you want too proceed?!", "Warning!", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
             if (result == DialogResult.Yes || result == DialogResult.OK)
                 return true;
             else
                 return false;
         }
 
+        /// <summary>
+        /// Checks the backup path from the config and creates folders when necessary. NOTE: Config may be overridden by a command Line Paramenter.
+        /// </summary>
         private bool CheckBackupPath()
         {
             string backupRepository;
@@ -524,6 +589,9 @@ namespace ACEManager
             return true;
         }
 
+        /// <summary>
+        /// Checks the data path from the config and creates folders when necessary. NOTE: Config may be overridden by a command Line Paramenter.
+        /// </summary>
         private bool CheckDataPath()
         {
             if (ConfigManager.DataPath == null && ACEManager.Config.DataRepository?.Length > 0)
@@ -623,19 +691,19 @@ namespace ACEManager
             // Check the Backup dirctory permission
             if (!CheckBackupPath()) return false;
             var newFilePath = Path.GetFullPath(Path.Combine(ConfigManager.BackupPath, databaseName + "." + DateTime.Now.ToString("yyyy-dd-M-HH-mm-ss") + ".sqldump"));
-            var result = Database.BackupDatabase(newFilePath, databaseName);
+            var result = Database.ExecuteBackup(newFilePath, databaseName);
             if (result.Length > 0)
             {
                 LogText(result);
                 switch (defaultDatabase)
                 {
-                    case 0:
+                    case (int)DefaultACEDatabase.Authentication:
                         ACEManager.Config.AuthLastBackupPath = newFilePath;
                         break;
-                    case 1:
+                    case (int)DefaultACEDatabase.Shard:
                         ACEManager.Config.ShardLastBackupPath = newFilePath;
                         break;
-                    case 2:
+                    case (int)DefaultACEDatabase.World:
                         ACEManager.Config.WorldLastBackupPath = newFilePath;
                         break;
                     default:
@@ -660,7 +728,7 @@ namespace ACEManager
             }
             // Check the Backup dirctory permission
             if (!CheckBackupPath()) return false;
-            var result = Database.RestoreDatabase(restorePath, databaseName);
+            var result = Database.ExecuteRestore(restorePath, databaseName);
             if (result.Length > 0)
             {
                 LogText(result);
@@ -811,6 +879,60 @@ namespace ACEManager
             btnSave.Enabled = true;
         }
 
+        /// <summary>
+        /// Called from command line to load all backups, from config.
+        /// </summary>
+        public void LoadAllBackups()
+        {
+            DisableWarnings = true;
+            BtnLoadLastAuthBackup_Click(null, null);
+            BtnLoadLastShardBackup_Click(null, null);
+            BtnLoadLastWorldBackup_Click(null, null);
+            DisableWarnings = false;
+        }
+
+        public string OpenFileDialog()
+        {
+            if (!CheckBackupPath())
+            {
+                var errMsg = "Error in Backup Path, check your config.";
+                LogText(errMsg);
+                return errMsg;
+            }
+
+            OpenFileDialog fileSelect = new OpenFileDialog();
+            fileSelect.InitialDirectory = ConfigManager.BackupPath?.Length > 0 ? ConfigManager.BackupPath : "C:\\";
+            fileSelect.Filter = "sql files (*.sql)|*.sql|sql dumps (*.sqldump|*.sqldump|All files (*.*)|*.*";
+            fileSelect.FilterIndex = 4;
+            fileSelect.RestoreDirectory = true;
+
+            string filePath = "";
+            if (fileSelect.ShowDialog() == DialogResult.OK)
+            {
+                filePath = fileSelect.FileName;
+            }
+            return filePath;
+        }
+
+        public bool OpenFolderDialog()
+        {
+            if (!CheckDataPath())
+            {
+                var errMsg = "Error in Backup Path, check your config.";
+                LogText(errMsg);
+                return false;
+            }
+            FolderBrowserDialog folderSelect = new FolderBrowserDialog();
+            folderSelect.SelectedPath = ConfigManager.DataPath?.Length > 0 ? ConfigManager.DataPath : "C:\\";
+            if (folderSelect.ShowDialog() == DialogResult.OK)
+            {
+                ConfigManager.SetDataPath(folderSelect.SelectedPath);
+                return true;
+            }
+            else
+                return false;
+        }
+
         private void ChkBxAdvanced_CheckedChanged(object sender, EventArgs e)
         {
             if (chkBxAdvanced.CheckState == CheckState.Checked)
@@ -825,7 +947,7 @@ namespace ACEManager
                 }
                 this.Height = 646;
                 txtBxDBLog.Height = 582;
-                aceLogo.Location = new System.Drawing.Point(12,473);
+                aceLogo.Location = new System.Drawing.Point(12, 473);
                 grpDBSettings.Location = new System.Drawing.Point(154, 473);
                 grpSetupIndividualDatabases.Visible = true;
                 grpBackupRestore.Visible = true;
@@ -855,7 +977,7 @@ namespace ACEManager
             this.Close();
         }
 
-        private void BtnDownloadUpdates_Click(object sender, EventArgs e)
+        public void BtnDownloadUpdates_Click(object sender, EventArgs e)
         {
             DisableButtons();
             if (DownloadUpdates())
@@ -863,7 +985,7 @@ namespace ACEManager
             EnableButtons();
         }
 
-        private void BtnCreateAuthDB_Click(object sender, EventArgs e)
+        public void BtnCreateAuthDB_Click(object sender, EventArgs e)
         {
             if (txtBxDBAuthName.TextLength > 0)
             {
@@ -983,7 +1105,7 @@ namespace ACEManager
             }
         }
 
-        private void BtnWorldUpdates_Click(object sender, EventArgs e)
+        public void BtnWorldUpdates_Click(object sender, EventArgs e)
         {
             if (txtBxDBWorldName.TextLength > 0)
             {
@@ -999,7 +1121,7 @@ namespace ACEManager
             }
         }
 
-        private void BtnResetAuthDB_Click(object sender, EventArgs e)
+        public void BtnResetAuth_Click(object sender, EventArgs e)
         {
             if (txtBxDBAuthName.TextLength > 0)
             {
@@ -1017,7 +1139,7 @@ namespace ACEManager
             }
         }
 
-        private void BtnResetShardDB_Click(object sender, EventArgs e)
+        public void BtnResetShard_Click(object sender, EventArgs e)
         {
             if (txtBxDBShardName.TextLength > 0)
             {
@@ -1035,7 +1157,7 @@ namespace ACEManager
             }
         }
 
-        private void BtnRestWorldDB_Click(object sender, EventArgs e)
+        public void BtnResetWorld_Click(object sender, EventArgs e)
         {
             if (txtBxDBWorldName.TextLength > 0)
             {
@@ -1053,7 +1175,7 @@ namespace ACEManager
             }
         }
 
-        private void BtnResetAllData_Click(object sender, EventArgs e)
+        public void BtnResetAllData_Click(object sender, EventArgs e)
         {
             LogText($"Resetting All!!!!");
             // Allow user to cancel:
@@ -1064,9 +1186,9 @@ namespace ACEManager
             }
             DisableWarnings = true;
             DisableButtons();
-            BtnResetAuthDB_Click(null, null);
-            BtnResetShardDB_Click(null, null);
-            BtnRestWorldDB_Click(null, null);
+            BtnResetAuth_Click(null, null);
+            BtnResetShard_Click(null, null);
+            BtnResetWorld_Click(null, null);
             EnableButtons();
             DisableWarnings = false;
             LogText("Done resetting and loading all data!");
@@ -1126,7 +1248,7 @@ namespace ACEManager
             }
         }
 
-        private void BtnBackupAuth_Click(object sender, EventArgs e)
+        public void BtnBackupAuth_Click(object sender, EventArgs e)
         {
             if (txtBxDBAuthName.TextLength > 0)
             {
@@ -1134,7 +1256,7 @@ namespace ACEManager
                 DisableButtons();
                 var databaseName = txtBxDBAuthName.Text;
                 LogText($"Backing up {databaseName}.");
-                if (BackupDatabase(databaseName, (int)DefaultACEDatabases.Authentication))
+                if (BackupDatabase(databaseName, (int)DefaultACEDatabase.Authentication))
                     LogText("Backup Completed!");
                 else
                     LogText($"Failure durring backup.");
@@ -1146,7 +1268,7 @@ namespace ACEManager
             }
         }
 
-        private void BtnBackupShard_Click(object sender, EventArgs e)
+        public void BtnBackupShard_Click(object sender, EventArgs e)
         {
             if (txtBxDBShardName.TextLength > 0)
             {
@@ -1154,7 +1276,7 @@ namespace ACEManager
                 DisableButtons();
                 var databaseName = txtBxDBShardName.Text;
                 LogText($"Backing up {databaseName}.");
-                if (BackupDatabase(databaseName, (int)DefaultACEDatabases.Shard))
+                if (BackupDatabase(databaseName, (int)DefaultACEDatabase.Shard))
                     LogText("Backup Completed!");
                 else
                     LogText($"Failure durring backup.");
@@ -1166,7 +1288,7 @@ namespace ACEManager
             }
         }
 
-        private void BtnBackupWorld_Click(object sender, EventArgs e)
+        public void BtnBackupWorld_Click(object sender, EventArgs e)
         {
             if (txtBxDBWorldName.TextLength > 0)
             {
@@ -1174,7 +1296,7 @@ namespace ACEManager
                 DisableButtons();
                 var databaseName = txtBxDBWorldName.Text;
                 LogText($"Backing up {databaseName}.");
-                if (BackupDatabase(databaseName, (int)DefaultACEDatabases.World))
+                if (BackupDatabase(databaseName, (int)DefaultACEDatabase.World))
                     LogText("Backup Completed!");
                 else
                     LogText($"Failure durring backup.");
@@ -1186,7 +1308,7 @@ namespace ACEManager
             }
         }
 
-        private void BtnBackupAllData_Click(object sender, EventArgs e)
+        public void BtnBackupAllData_Click(object sender, EventArgs e)
         {
             LogText($"Backing up all of the databases!");
 
@@ -1196,49 +1318,6 @@ namespace ACEManager
             BtnBackupWorld_Click(null, null);
             EnableButtons();
             LogText("Done backing up all of the databases!");
-        }
-
-        private string OpenFileDialog()
-        {
-            if (!CheckBackupPath())
-            {
-                var errMsg = "Error in Backup Path, check your config.";
-                LogText(errMsg);
-                return errMsg;
-            }
-
-            OpenFileDialog fileSelect = new OpenFileDialog();
-            fileSelect.InitialDirectory = ConfigManager.BackupPath?.Length > 0 ? ConfigManager.BackupPath : "C:\\";
-            fileSelect.Filter = "sql files (*.sql)|*.sql|sql dumps (*.sqldump|*.sqldump|All files (*.*)|*.*";
-            fileSelect.FilterIndex = 4;
-            fileSelect.RestoreDirectory = true;
-
-            string filePath = "";
-            if (fileSelect.ShowDialog() == DialogResult.OK)
-            {
-                filePath = fileSelect.FileName;
-            }
-            return filePath;
-        }
-
-        private bool OpenFolderDialog()
-        {
-            if (!CheckDataPath())
-            {
-                var errMsg = "Error in Backup Path, check your config.";
-                LogText(errMsg);
-                return false;
-            }
-            FolderBrowserDialog folderSelect = new FolderBrowserDialog();
-            folderSelect.SelectedPath = ConfigManager.DataPath?.Length > 0 ? ConfigManager.DataPath : "C:\\";
-            string folderPath = "";
-            if (folderSelect.ShowDialog() == DialogResult.OK)
-            {
-                ConfigManager.SetDataPath(folderSelect.SelectedPath);
-                return true;
-            }
-            else
-                return false;
         }
 
         private void BtnLoadAnAuthBackup_Click(object sender, EventArgs e)
@@ -1292,7 +1371,7 @@ namespace ACEManager
             }
         }
 
-        private void BtnLoadAuthBackup_Click(object sender, EventArgs e)
+        public void BtnLoadLastAuthBackup_Click(object sender, EventArgs e)
         {
             var filePath = ACEManager.Config.AuthLastBackupPath;
             if (filePath.Length > 0 && txtBxDBAuthName.TextLength > 0)
@@ -1309,7 +1388,7 @@ namespace ACEManager
             }
         }
 
-        private void BtnLoadLastShardBackup_Click(object sender, EventArgs e)
+        public void BtnLoadLastShardBackup_Click(object sender, EventArgs e)
         {
             var filePath = ACEManager.Config.ShardLastBackupPath;
             if (filePath.Length > 0 && txtBxDBShardName.TextLength > 0)
@@ -1326,7 +1405,7 @@ namespace ACEManager
             }
         }
 
-        private void BtnLoadLastWorldBackup_Click(object sender, EventArgs e)
+        public void BtnLoadLastWorldBackup_Click(object sender, EventArgs e)
         {
             var filePath = ACEManager.Config.WorldLastBackupPath;
             if (filePath.Length > 0 && txtBxDBWorldName.TextLength > 0)

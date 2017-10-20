@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using ConsoleControlAPI;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace ACEManager
 {
@@ -173,6 +174,36 @@ namespace ACEManager
             }
         }
 
+        private async void LoadUsers(string[] userFileContents)
+        {
+            if (userFileContents.Length > 0)
+            {
+                // Make sure we are started, if not start and wait:
+                if (!ProcessInterface.IsProcessRunning)
+                {
+                    EchoCommand("Starting...");
+                    StartServer();
+                    UpdateStatus();
+                    ProcessError("You must start the server and wait for the application to reach the \"ACE >>\" prompt, before you continue too load users.");
+                    return;
+                }
+                foreach (var line in userFileContents)
+                {
+                    // go through each line and strip out the user, password, permission:
+                    var user = line.Split(',');
+                    var msg = $"accountcreate {user[0]} {user[1]} {user[2]}";
+                    EchoCommand(msg);
+                    SendServerCommand(msg);
+                    UpdateStatus();
+                    await PutTaskDelay();
+                }
+            }
+        }
+        async Task PutTaskDelay()
+        {
+            await Task.Delay(100);
+        }
+
         private void BtnStart_Click(object sender, EventArgs e)
         {
             if (!ProcessInterface.IsProcessRunning)
@@ -296,6 +327,7 @@ namespace ACEManager
             // Add the menu items
             NativeMethods.AppendMenu(hSysMenu, NativeMethods.MF_STRING, NativeMethods.ext_SYSMENU_CONFIG_ID, "&Application Settings…");
             NativeMethods.AppendMenu(hSysMenu, NativeMethods.MF_STRING, NativeMethods.ext_SYSMENU_DBMAINT_ID, "&Database Maintenance…");
+            NativeMethods.AppendMenu(hSysMenu, NativeMethods.MF_STRING, NativeMethods.ext_SYSMENU_USERUPLOAD_ID, "&Load Users…");
             NativeMethods.AppendMenu(hSysMenu, NativeMethods.MF_STRING, NativeMethods.ext_SYSMENU_ABOUT_ID, "&About…");
         }
 
@@ -314,6 +346,53 @@ namespace ACEManager
                     case NativeMethods.ext_SYSMENU_DBMAINT_ID:
                         {
                             ACEManager.DatabaseMaintenanceForm.ShowDialog();
+                            break;
+                        }
+                    case NativeMethods.ext_SYSMENU_USERUPLOAD_ID:
+                        {
+                            string userFile = ACEManager.Config.UserFilePath;
+                            string[] users = { };
+                            // if config var exists, ask to load or ask for a folder
+                            if(userFile?.Length > 0)
+                            {
+                                DialogResult res = MessageBox.Show($"Would you like to load the user file from: {ACEManager.Config.UserFilePath}", "Change user file path?", MessageBoxButtons.YesNoCancel);
+                                switch (res)
+                                {
+                                    case DialogResult.Yes:
+                                        break;
+                                    case DialogResult.No:
+                                        ACEManager.Config.UserFilePath = "";
+                                        break;
+                                    case DialogResult.Cancel:
+                                        return;
+                                }
+                            }
+                            if (string.IsNullOrEmpty(ACEManager.Config.UserFilePath))
+                            {
+                                userFile = ACEManager.DatabaseMaintenanceForm.OpenFileDialog();
+                            }
+                            if (userFile?.Length > 0)
+                            {
+                                ACEManager.Config.UserFilePath = userFile;
+                                try
+                                {
+                                    users = File.ReadAllLines(userFile);
+                                } catch (Exception error)
+                                {
+                                    ProcessError($"Error opening user file. {error.Message}");
+                                }
+                                finally
+                                {
+                                    ACEManager.Config.UserFilePath = userFile;
+                                    
+                                }
+                            }
+                            else
+                            {
+                                ProcessError("Error selecting user file.");
+                            }
+
+                            LoadUsers(users);
                             break;
                         }
                     case NativeMethods.ext_SYSMENU_ABOUT_ID:

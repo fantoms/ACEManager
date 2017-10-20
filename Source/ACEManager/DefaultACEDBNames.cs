@@ -3,10 +3,12 @@
     /// <summary>
     /// Order of the databases
     /// </summary>
-    public enum DefaultACEDatabases
+    public enum DefaultACEDatabase
     {
-        Authentication = 0,
-        Shard = 1,
-        World = 2,
+        None = 0,
+        Authentication = 1,
+        Shard = 2,
+        World = 3,
+        All = 4
     }
 }
