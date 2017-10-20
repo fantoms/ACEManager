@@ -50,9 +50,9 @@ namespace ACEManager
             ACEManager.Config.DatabasePort = Int32.Parse(txtBxDBPort.Text);
             ACEManager.Config.DatabaseUsername = txtBxDBUsername.Text;
             ACEManager.Config.DatabasePassword = txtBxDBPassword.Text;
-            ACEManager.Config.DataRepository = txtBxLocalDataPath.Text;
             ACEManager.Config.GithubURL = txtBxACEWorldGithubUrl.Text;
-            ACEManager.Config.BackupPath = txtBxBackupPath.Text;
+            ConfigManager.SetDataPath(ACEManager.Config.DataRepository = txtBxLocalDataPath.Text);
+            ConfigManager.SetBackupPath(ACEManager.Config.BackupPath = txtBxBackupPath.Text);
             ACEManager.ConfigurationUpdateRequired = true;
             ConfigManager.Save(ACEManager.Config);
         }
