@@ -68,7 +68,7 @@ namespace ACEManager
         /// </summary>
         public void Database_StatementExecuted(object sender, MySqlScriptEventArgs e)
         {
-            LogText("Loading...");
+            LogText($"{e.Position}");
         }
 
         /// <summary>

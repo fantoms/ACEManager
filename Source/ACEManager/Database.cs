@@ -233,11 +233,6 @@ namespace ACEManager
             using (MySqlConnection connection = Database.Connect(databaseName))
             {
                 MySqlScript query = new MySqlScript(connection, script);
-                // TODO: Regex capture actual delimter, instead of forcing "$$";
-                if (script.Contains("DELIMITER"))
-                {
-                    query.Delimiter = "$$";
-                }
                 query.Error += ACEManager.DatabaseMaintenanceForm.Database_MySqlError;
                 query.StatementExecuted += ACEManager.DatabaseMaintenanceForm.Database_StatementExecuted;
                 query.ScriptCompleted += ACEManager.DatabaseMaintenanceForm.Database_StatementCompleted;
